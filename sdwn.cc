@@ -438,15 +438,9 @@ uint8_t		FrameRetryLimit	= 7;
 bool 		RentryPackets 	= false;
 std::string	FragmentationThreshold = "2200";
 
-/*
 std::vector<uint32_t> IntervalValues= { 20,  30,  30,  20,   10,   10,   1,   1};
 std::vector<std::string> AcValues   = {"BE", "BK", "BK", "BE", "VI", "VI", "VO", "VO"};
 std::vector<uint32_t> TosValues     = {0x00, 0x20, 0x40, 0x60, 0x80, 0xa0, 0xc0, 0xe0};
-*/
-
-std::vector<uint32_t> IntervalValues= {  1,   1};
-std::vector<std::string> AcValues   = {"BE", "BE"};
-std::vector<uint32_t> TosValues     = {0x00,  0x60};
 
 struct EdcaConfig {
     uint32_t aifsn;
@@ -475,18 +469,17 @@ void Sta_Information(uint32_t index, uint32_t tosValue,std::string ac,  Ipv4Inte
 
 int main(int argc, char* argv[]) {
 
-    CommandLine cmd;
-    cmd.Parse(argc, argv);
-    GlobalValue::Bind("SimulatorImplementationType", StringValue("ns3::RealtimeSimulatorImpl"));
+    	CommandLine cmd;
+    	cmd.Parse(argc, argv);
+    	GlobalValue::Bind("SimulatorImplementationType", StringValue("ns3::RealtimeSimulatorImpl"));
 
-    Time::SetResolution(Time::NS);
-    LogComponentEnableAll(LOG_PREFIX_TIME); // Agrega timestamp
+    	Time::SetResolution(Time::NS);
+    	LogComponentEnableAll(LOG_PREFIX_TIME); // Agrega timestamp
 
-    LogComponentEnable("SDWN_PoFi_NS3", LOG_LEVEL_INFO);
-    //LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
-    //LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
+    	LogComponentEnable("SDWN_PoFi_NS3", LOG_LEVEL_INFO);
+    	//LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
+    	//LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
 
-    for (uint32_t i = 1; i <= factor; ++i) {
         // Crear nodos
         uint16_t    nStaWifi    = i * 10;
         std::cout << "Realizando analisis para " << nStaWifi << " Dispositivos." << std::endl;
@@ -664,7 +657,6 @@ int main(int argc, char* argv[]) {
         flowMonitor->SerializeToXmlFile(filepath_flowmon + filename + ".xml", true, true);
         Simulator::Destroy();
         
-        }
 	return 0;
 }
 
