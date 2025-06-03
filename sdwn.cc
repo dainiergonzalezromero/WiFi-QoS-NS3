@@ -206,8 +206,8 @@ class PoFiAp : public Application {
                 queueType = "LOW";
             }
             
-            /*NS_LOG_INFO("[PoFiAp] Packet in " << queueType << " QUEUE from " << item.sender 
-                       << " arrived at " << item.arrivalTime.GetSeconds() << "s");*/
+            NS_LOG_INFO("[PoFiAp] Packet in " << queueType << " QUEUE from " << item.sender 
+                       << " arrived at " << item.arrivalTime.GetSeconds() << "s");
             
             if (!isProcessing) {
                 isProcessing = true;
@@ -216,9 +216,9 @@ class PoFiAp : public Application {
         }
         
         void ProcessQueue() {
-            /*NS_LOG_INFO("[PoFiAp] HIGH QUEUE " << highPriorityQueue.size()
+            NS_LOG_INFO("[PoFiAp] HIGH QUEUE " << highPriorityQueue.size()
                          << " MEDIUM QUEUE " << mediumPriorityQueue.size()
-                         << " LOW QUEUE " << lowPriorityQueue.size());*/
+                         << " LOW QUEUE " << lowPriorityQueue.size());
             
             if (highPriorityQueue.empty() && mediumPriorityQueue.empty() && lowPriorityQueue.empty()) {
                 isProcessing = false;
@@ -318,11 +318,11 @@ class PoFiAp : public Application {
     		edca->SetMaxCw(config.cwMax);
 
     		// (Opcional) Log para confirmar configuración
-   		 	/*NS_LOG_INFO("[PoFiAp] Configured " << ac 
+   		 	NS_LOG_INFO("[PoFiAp] Configured " << ac 
                  	<< " with AIFSN=" << config.aifsn 
                  	<< ", CWmin=" << config.cwMin 
                  	<< ", CWmax=" << config.cwMax 
-                 	<< ", TXOP=" << txopLimit.GetMicroSeconds() << " μs");*/
+                 	<< ", TXOP=" << txopLimit.GetMicroSeconds() << " μs");
 		}
 
 
