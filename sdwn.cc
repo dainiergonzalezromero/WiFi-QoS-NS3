@@ -474,19 +474,20 @@ void Sta_Information(uint32_t index, uint32_t tosValue,std::string ac,  Ipv4Inte
 
 
 int main(int argc, char* argv[]) {
+
+    CommandLine cmd;
+    cmd.Parse(argc, argv);
+    GlobalValue::Bind("SimulatorImplementationType", StringValue("ns3::RealtimeSimulatorImpl"));
+
+    Time::SetResolution(Time::NS);
+    LogComponentEnableAll(LOG_PREFIX_TIME); // Agrega timestamp
+
+    LogComponentEnable("SDWN_PoFi_NS3", LOG_LEVEL_INFO);
+    //LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
+    //LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
+
     for (uint32_t i = 1; i <= factor; ++i) {
-
-        CommandLine cmd;
-        cmd.Parse(argc, argv);
-        GlobalValue::Bind("SimulatorImplementationType", StringValue("ns3::RealtimeSimulatorImpl"));
-
-        Time::SetResolution(Time::NS);
-        LogComponentEnable("SDWN_PoFi_NS3", LOG_LEVEL_INFO);
-        //LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
-        //LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
-
         // Crear nodos
-
         uint16_t    nStaWifi    = i * 10;
         std::cout << "Realizando analisis para " << nStaWifi << " Dispositivos." << std::endl;
 
@@ -636,7 +637,7 @@ int main(int argc, char* argv[]) {
         const std::string filepath_xml = "scratch/Finals/xml/" + category + "/" + packetsize;
         system(("mkdir -p " + filepath_xml).c_str());
         
-        const std::string filename = "/SDWN_PoFi_NS3_"+ category + "_Priority_" + std::to_string(nStaWifi) + "_DEVICES_" +  packetsize +"_PacketSize_"+ std::to_string(TimeSimulation) +"_Min_ORIGINAL";
+        const std::string filename = "/SDWN_NS3_PoFi_"+ category + "_Priority_" + std::to_string(nStaWifi) + "_DEVICES_" +  packetsize +"_PacketSize_"+ std::to_string(TimeSimulation) +"_Min_ORIGINAL";
         AnimationInterface anim(filepath_xml + filename + ".xml");
         
 
