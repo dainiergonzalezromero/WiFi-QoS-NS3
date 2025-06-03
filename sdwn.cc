@@ -12,7 +12,9 @@
 #include "ns3/packet.h"
 #include "ns3/log.h"
 
+
 #include <iomanip>
+#include <cstdlib>
 
 using namespace ns3;
 
@@ -97,7 +99,7 @@ class PoFiAp : public Application {
             uint8_t tos;
             Ptr<Packet> packet;
             Ipv4Address sender;
-            Time arrivalTime;  // Añade este campo para registrar el tiempo de llegada
+            Time arrivalTime;  
             
             bool operator<(const QueueItem& other) const {
                 return tos < other.tos;
@@ -115,6 +117,21 @@ class PoFiAp : public Application {
         };
         
         std::map<PoFiController::Priority, Metrics> metricsMap;
+
+		struct EdcaConfig {
+    		uint32_t aifsn;
+    		uint32_t cwMin;
+    		uint32_t cwMax;
+    		uint32_t ampduSize;
+		};
+
+		std::map<std::string, EdcaConfig> edcaParams = {
+    		{"VO", {2, 3, 7, 8192}},
+    		{"VI", {2, 7, 15, 16384}},
+    		{"BE", {3, 15, 1023, 32768}},
+    		{"BK", {7, 15, 1023, 65535}}
+		};
+
     private:
         Ptr<Socket> m_socket;
         uint16_t m_port;
@@ -153,7 +170,7 @@ class PoFiAp : public Application {
                 InetSocketAddress addr = InetSocketAddress::ConvertFrom(from);
                 Ipv4Address sender = addr.GetIpv4();
                 uint8_t tos = tosMap[sender];
-                PoFiController::FlowMod entry; // Declaración fuera del if-else
+                PoFiController::FlowMod entry; 
         
                 if (tosRegistry.find(tos) == tosRegistry.end()) {
                     PoFiController controller;
@@ -171,7 +188,7 @@ class PoFiAp : public Application {
                 }
                  // Crear QueueItem con el tiempo actual
                 QueueItem item{tos, packet, sender, Simulator::Now()};
-                EnqueuePacket(entry.priority, item); // Ahora entry es accesible
+                EnqueuePacket(entry.priority, item); 
             }
         }
         
@@ -189,19 +206,19 @@ class PoFiAp : public Application {
                 queueType = "LOW";
             }
             
-            NS_LOG_INFO("[PoFiAp] Packet in " << queueType << " QUEUE from " << item.sender 
-                       << " arrived at " << item.arrivalTime.GetSeconds() << "s");
+            /*NS_LOG_INFO("[PoFiAp] Packet in " << queueType << " QUEUE from " << item.sender 
+                       << " arrived at " << item.arrivalTime.GetSeconds() << "s");*/
             
             if (!isProcessing) {
                 isProcessing = true;
-                Simulator::Schedule(MilliSeconds(5.0), &PoFiAp::ProcessQueue, this);
+                Simulator::Schedule(MilliSeconds(1), &PoFiAp::ProcessQueue, this);
             }
         }
         
         void ProcessQueue() {
-            NS_LOG_INFO("[PoFiAp] HIGH QUEUE " << highPriorityQueue.size()
+            /*NS_LOG_INFO("[PoFiAp] HIGH QUEUE " << highPriorityQueue.size()
                          << " MEDIUM QUEUE " << mediumPriorityQueue.size()
-                         << " LOW QUEUE " << lowPriorityQueue.size());
+                         << " LOW QUEUE " << lowPriorityQueue.size());*/
             
             if (highPriorityQueue.empty() && mediumPriorityQueue.empty() && lowPriorityQueue.empty()) {
                 isProcessing = false;
@@ -222,7 +239,7 @@ class PoFiAp : public Application {
             
             // Pasar el arrivalTime a ForwardPacket
             ForwardPacket(item.packet, item.tos, item.sender, item.arrivalTime);
-            Simulator::Schedule(MilliSeconds(5), &PoFiAp::ProcessQueue, this);
+            Simulator::Schedule(MilliSeconds(1), &PoFiAp::ProcessQueue, this);
         }
 
         void ForwardPacket(Ptr<Packet> packet, uint8_t tos, Ipv4Address originalSender, Time arrivalTime) {
@@ -231,10 +248,8 @@ class PoFiAp : public Application {
             // 1. Configurar TXOP - AÑADIMOS ESTA LÍNEA CLAVE
             ConfigureTxop(entry.priority, entry.txopLimit);
         
-            // 2. Crear y configurar socket para el envío
-            TypeId tid = TypeId::LookupByName("ns3::UdpSocketFactory");
-            Ptr<Socket> sendSocket = Socket::CreateSocket(GetNode(), tid);
-            sendSocket->SetIpTos(tos);
+            // 2. Configurar socket para el envío
+            m_socket->SetIpTos(tos);
             
             // 3. Calcular métricas
             Time now = Simulator::Now();
@@ -258,66 +273,69 @@ class PoFiAp : public Application {
                        << " | Latency: " << latencyMs << "ms"
                        << " | TXOP: " << entry.txopLimit << " μs");
             
-            Address echoAddr = InetSocketAddress(originalSender, m_port);
-            sendSocket->SendTo(packet, 0, echoAddr);
+            m_socket->SendTo(packet, 0, InetSocketAddress(originalSender, m_port));
         }
         
         void ConfigureTxop(PoFiController::Priority priority, uint32_t txopMicroSeconds) {
+    		Time txopLimit = MicroSeconds(txopMicroSeconds);
 
-            Time txopLimit = MicroSeconds(txopMicroSeconds);
-            
-            // Verificación de ejecución - Añadimos log de confirmación
-            NS_LOG_INFO("[PoFiAp] Configuring TXOP for priority: " << priority 
-                       << " with limit: " << txopLimit.GetMicroSeconds() << " μs");
-            
-            Ptr<NetDevice> device = GetNode()->GetDevice(0);
-            Ptr<WifiNetDevice> wifiDevice = DynamicCast<WifiNetDevice>(device);
-            
-            if (!wifiDevice) {
-                NS_LOG_ERROR("[PoFiAp] Device 0 is not a WifiNetDevice!");
-                return;
-            }
-        
-            Ptr<WifiMac> wifiMac = wifiDevice->GetMac();
-            PointerValue ptr;
-            Ptr<QosTxop> edca;
-        
-            std::string ac;
-            switch(priority) {
-                case PoFiController::HIGH: ac = "VO"; break;
-                case PoFiController::MEDIUM: ac = "VI"; break;
-                case PoFiController::LOW: ac = "BE"; break;
-                default: ac = "BE";
-            }
-        
-            // Añadimos logs para cada caso
-            if (ac == "VO") {
-                wifiMac->GetAttribute("VO_Txop", ptr);
-                NS_LOG_DEBUG("[PoFiAp] Configuring VO_Txop");
-            } else if (ac == "VI") {
-                wifiMac->GetAttribute("VI_Txop", ptr);
-                NS_LOG_DEBUG("[PoFiAp] Configuring VI_Txop");
-            } else if (ac == "BE") {
-                wifiMac->GetAttribute("BE_Txop", ptr);
-                NS_LOG_DEBUG("[PoFiAp] Configuring BE_Txop");
-            } else {
-                wifiMac->GetAttribute("BK_Txop", ptr);
-                NS_LOG_DEBUG("[PoFiAp] Configuring BK_Txop");
-            }
-        
-            edca = ptr.Get<QosTxop>();
-            edca->SetTxopLimit(txopLimit);
-            
-            // Log de confirmación final
-            NS_LOG_INFO("[PoFiAp] Successfully configured TXOP for AC_" << ac 
-                       << " to " << txopLimit.GetMicroSeconds() << " μs");
-        }
+    		Ptr<NetDevice> device = GetNode()->GetDevice(0);
+    		Ptr<WifiNetDevice> wifiDevice = DynamicCast<WifiNetDevice>(device);
+
+    		if (!wifiDevice) {
+        		NS_LOG_ERROR("[PoFiAp] Device 0 is not a WifiNetDevice!");
+        		return;
+    		}
+
+    		Ptr<WifiMac> wifiMac = wifiDevice->GetMac();
+    		PointerValue ptr;
+    		Ptr<QosTxop> edca;
+
+    		std::string ac;
+    		switch (priority) {
+        		case PoFiController::HIGH:   ac = "VO"; break;
+        		case PoFiController::MEDIUM: ac = "VI"; break;
+        		case PoFiController::LOW:    ac = "BE"; break;
+        		default:                     ac = "BK"; break;
+    		}
+
+    		// Obtener configuración desde el mapa
+    		EdcaConfig config = edcaParams[ac];
+
+    		// Seleccionar el atributo correcto
+    		wifiMac->GetAttribute(ac + "_Txop", ptr);
+    		edca = ptr.Get<QosTxop>();
+
+    		if (!edca) {
+        		NS_LOG_ERROR("[PoFiAp] EDCA pointer is null for AC: " << ac);
+        		return;
+    		}
+
+    		// Aplicar configuración
+    		edca->SetTxopLimit(txopLimit);
+    		edca->SetAifsn(config.aifsn);
+    		edca->SetMinCw(config.cwMin);
+    		edca->SetMaxCw(config.cwMax);
+
+    		// (Opcional) Log para confirmar configuración
+   		 	/*NS_LOG_INFO("[PoFiAp] Configured " << ac 
+                 	<< " with AIFSN=" << config.aifsn 
+                 	<< ", CWmin=" << config.cwMin 
+                 	<< ", CWmax=" << config.cwMax 
+                 	<< ", TXOP=" << txopLimit.GetMicroSeconds() << " μs");*/
+		}
+
 
         void PoFiApStats() {
             uint32_t numStas = NodeList::GetNNodes() - 1; // Restamos 1 para excluir el AP
             
             // Nombre del archivo CSV con número de STAs
-            const std::string csvFilename = "scratch/statistics/SDWN_NS3_PoFiAp_" + std::to_string(numStas) + "_DEVICES.csv";
+            const std::string category = "BE";
+            const std::string packetsize = "256";
+        	const std::string filepath = "scratch/Finals/estadisticas/" + category + "/" + packetsize;
+			system(("mkdir -p " + filepath).c_str());
+			const std::string csvFilename = filepath + "/SDWN_NS3_PoFiAp_"+ category + "_Priority_" + std::to_string(numStas) + "_DEVICES_" +  packetsize +"_PacketSize_"+ "_30_Min_Original.csv";
+            
 
             // Abrir archivo CSV
             std::ofstream csvFile(csvFilename);
@@ -409,31 +427,44 @@ class PoFiApHelper {
 // *********************************************************************************
 // ******************************* Global Variables ********************************
 // *********************************************************************************
-uint8_t     factor      = 4;
-uint32_t    nStaWifi    = factor * 10;
-double      radio       = 25.0;
+uint8_t     factor      = 10;
+double      radio       = 50.0;
 uint16_t    port        = 8080;
-uint32_t    PacketSize  = 1024;
+uint16_t    PacketSize  = 256;
 bool        enablePcap  = true;
-uint16_t     TimeSimulation = 50;
+uint16_t    TimeSimulation = 30;
 
+uint8_t		FrameRetryLimit	= 7;
+bool 		RentryPackets 	= false;
+std::string	FragmentationThreshold = "2200";
+
+/*
 std::vector<uint32_t> IntervalValues= { 20,  30,  30,  20,   10,   10,   1,   1};
 std::vector<std::string> AcValues   = {"BE", "BK", "BK", "BE", "VI", "VI", "VO", "VO"};
 std::vector<uint32_t> TosValues     = {0x00, 0x20, 0x40, 0x60, 0x80, 0xa0, 0xc0, 0xe0};
-std::map<std::string, UintegerValue> ampduSizes = {
-    {"BK", UintegerValue(65535)},
-    {"BE", UintegerValue(32768)},
-    {"VI", UintegerValue(16384)},
-    {"VO", UintegerValue(8192)}
+*/
+
+std::vector<uint32_t> IntervalValues= {  1,   1};
+std::vector<std::string> AcValues   = {"BE", "BE"};
+std::vector<uint32_t> TosValues     = {0x00,  0x60};
+
+struct EdcaConfig {
+    uint32_t aifsn;
+    uint32_t cwMin;
+    uint32_t cwMax;
+    uint32_t ampduSize;
+};
+
+std::map<std::string, EdcaConfig> edcaParams = {
+    {"VO", {2, 3, 7, 8192}},
+    {"VI", {2, 7, 15, 16384}},
+    {"BE", {3, 15, 1023, 32768}},
+    {"BK", {7, 15, 1023, 65535}}
 };
 
 // *********************************************************************************
 // *********************************** Functions ***********************************
 // *********************************************************************************
-
-WifiMacHelper ConfigureQoS(WifiMacHelper wifiMac, Ssid ssid, std::string ac, UintegerValue maxAmpduSize);
-void TxopAssign(Ptr<NetDevice> device, const std::string &ac, const std::string txop);
-
 void AnalyzeFlowMonitorResults(Ptr<FlowMonitor>, Ptr<Ipv4FlowClassifier>, uint32_t);
 void Sta_Information(uint32_t index, uint32_t tosValue,std::string ac,  Ipv4InterfaceContainer StaInterfaces, NetDeviceContainer wifiStaDevices);
 
@@ -443,163 +474,202 @@ void Sta_Information(uint32_t index, uint32_t tosValue,std::string ac,  Ipv4Inte
 
 
 int main(int argc, char* argv[]) {
+    for (uint32_t i = 1; i <= factor; ++i) {
 
-    CommandLine cmd;
-    cmd.Parse(argc, argv);
+        CommandLine cmd;
+        cmd.Parse(argc, argv);
+        GlobalValue::Bind("SimulatorImplementationType", StringValue("ns3::RealtimeSimulatorImpl"));
 
-    Time::SetResolution(Time::NS);
-    LogComponentEnable("SDWN_PoFi_NS3", LOG_LEVEL_INFO);
-    //LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
-    //LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
+        Time::SetResolution(Time::NS);
+        LogComponentEnable("SDWN_PoFi_NS3", LOG_LEVEL_INFO);
+        //LogComponentEnable("UdpEchoClientApplication", LOG_LEVEL_INFO);
+        //LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
 
-    // Crear nodos
-    NodeContainer wifiApNode;
-    wifiApNode.Create(1);
+        // Crear nodos
 
-    NodeContainer wifiStaNodes;
-    wifiStaNodes.Create(nStaWifi);
+        uint16_t    nStaWifi    = i * 10;
+        std::cout << "Realizando analisis para " << nStaWifi << " Dispositivos." << std::endl;
 
-    // Configuración de movilidad
-    MobilityHelper mobility;
-    mobility.SetPositionAllocator("ns3::UniformDiscPositionAllocator",
-                                  "rho", DoubleValue(radio),
-                                  "X", DoubleValue(0.0),
-                                  "Y", DoubleValue(0.0));
-    mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
-    mobility.Install(wifiStaNodes);
+        NodeContainer wifiApNode;
+        wifiApNode.Create(1);
 
-    MobilityHelper centerPosition;
-    centerPosition.SetPositionAllocator("ns3::GridPositionAllocator",
-                                        "MinX", DoubleValue(0.0),
-                                        "MinY", DoubleValue(0.0),
-                                        "DeltaX", DoubleValue(1.0),
-                                        "DeltaY", DoubleValue(1.0),
-                                        "GridWidth", UintegerValue(1),
-                                        "LayoutType", StringValue("RowFirst"));
-    centerPosition.SetMobilityModel("ns3::ConstantPositionMobilityModel");
-    centerPosition.Install(wifiApNode.Get(0));
+        NodeContainer wifiStaNodes;
+        wifiStaNodes.Create(nStaWifi);
 
-    // Configurar WiFi
-    WifiHelper wifi;
-    wifi.SetStandard(WIFI_STANDARD_80211n);
+        // Configuración de movilidad
+        MobilityHelper mobility;
+        mobility.SetPositionAllocator("ns3::UniformDiscPositionAllocator",
+                                    "rho", DoubleValue(radio),
+                                    "X", DoubleValue(0.0),
+                                    "Y", DoubleValue(0.0));
+        mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
+        mobility.Install(wifiStaNodes);
 
-    YansWifiPhyHelper wifiPhy;
-    
-    YansWifiChannelHelper wifiChannel = YansWifiChannelHelper::Default();
-    wifiPhy.SetChannel(wifiChannel.Create());
+        MobilityHelper centerPosition;
+        centerPosition.SetPositionAllocator("ns3::GridPositionAllocator",
+                                            "MinX", DoubleValue(0.0),
+                                            "MinY", DoubleValue(0.0),
+                                            "DeltaX", DoubleValue(1.0),
+                                            "DeltaY", DoubleValue(1.0),
+                                            "GridWidth", UintegerValue(1),
+                                            "LayoutType", StringValue("RowFirst"));
+        centerPosition.SetMobilityModel("ns3::ConstantPositionMobilityModel");
+        centerPosition.Install(wifiApNode.Get(0));
 
-    //wifiPhy.Set("ChannelSettings", StringValue("{11, 20, BAND_2_4GHZ, 0}"));
-    wifiPhy.Set("ChannelSettings", StringValue("{36, 20, BAND_5GHZ, 0}"));
+        // Configurar WiFi
+        WifiHelper wifi;
+        wifi.SetStandard(WIFI_STANDARD_80211n);
 
-    WifiMacHelper wifiMac;
-    Ssid ssid = Ssid("SDWN_PoFi_NS3");
-
-    // Configurar AP
-    NetDeviceContainer wifiApDevice;
-    wifiMac.SetType("ns3::ApWifiMac", 
-                    "Ssid", SsidValue(ssid), 
-                    "QosSupported", BooleanValue(true));
-
-    wifiApDevice = wifi.Install(wifiPhy, wifiMac, wifiApNode.Get(0));
-
-    // Configurar estaciones con QoS
-    NetDeviceContainer wifiStaDevices;
-
-    for (uint32_t i = 0; i < nStaWifi; ++i) {
-        std::string AC = AcValues[i % AcValues.size()];
-        WifiMacHelper mac = ConfigureQoS(wifiMac, ssid, AC, ampduSizes[AC]);
-        wifiStaDevices.Add(wifi.Install(wifiPhy, mac, wifiStaNodes.Get(i))); 
-        Ptr<NetDevice> device = wifiStaNodes.Get(i)->GetDevice(0);    
-    }
-
-    InternetStackHelper internet;
-    internet.Install(wifiApNode);
-    internet.Install(wifiStaNodes);
-
-    Ipv4AddressHelper address;
-    address.SetBase("192.168.1.0", "255.255.255.0");
-    Ipv4InterfaceContainer staInterfaces = address.Assign(wifiStaDevices);
-    Ipv4InterfaceContainer apInterface = address.Assign(wifiApDevice);
-
-    // Crear el controlador SDN para el AP
-    PoFiApHelper pofiHelper(port);
-    ApplicationContainer pofiApps = pofiHelper.Install(wifiApNode);
-
-    pofiApps.Start(Seconds(0.0));
-    pofiApps.Stop(Minutes(TimeSimulation));
-
-    ApplicationContainer clientApps;
-    Time startTime = Seconds(0.5); // Tiempo inicial de inicio
-    Time delayBetweenStarts = MilliSeconds(100); // Retraso entre cada inicio de cliente (100ms en este ejemplo)
-
-    for (uint32_t i = 0; i < wifiStaNodes.GetN(); ++i) {
-        uint32_t tosValue = TosValues[i % TosValues.size()];
-        std::string AC = AcValues[i % AcValues.size()];
-        uint32_t interval = IntervalValues[i % IntervalValues.size()];
-        uint32_t   MaxPackets = TimeSimulation * 60 / interval;
+        YansWifiPhyHelper wifiPhy;
         
-        UdpEchoClientHelper echoClient(apInterface.GetAddress(0), port);
-        echoClient.SetAttribute("MaxPackets", UintegerValue(MaxPackets));
-        echoClient.SetAttribute("Interval", TimeValue(Seconds(interval)));
-        echoClient.SetAttribute("PacketSize", UintegerValue(PacketSize));
-        echoClient.SetAttribute("Tos", UintegerValue(tosValue));
-        
-        ApplicationContainer app = echoClient.Install(wifiStaNodes.Get(i));
-        
-        app.Start(startTime);
-        app.Stop(Minutes(TimeSimulation));
-        
-        clientApps.Add(app);
-        startTime += delayBetweenStarts;
-        
-        Sta_Information(i, tosValue, AC, staInterfaces, wifiStaDevices);
-    }
-    
-    
-    // Añadido para habilitar el monitoreo de flujo
-    Ptr<FlowMonitor> flowMonitor;
-    FlowMonitorHelper flowHelper;
-    flowMonitor = flowHelper.InstallAll();
-    Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowHelper.GetClassifier());
+        YansWifiChannelHelper wifiChannel = YansWifiChannelHelper::Default();
+        wifiPhy.SetChannel(wifiChannel.Create());
 
-    // Animación y rastreo
-    AnimationInterface anim("scratch/xml/SDWN_PoFi_NS3_"+ std::to_string(nStaWifi) + "_DEVICES.xml");
-    anim.EnablePacketMetadata(true);
-    anim.UpdateNodeDescription(0, "Access Point");
+        //wifiPhy.Set("ChannelSettings", StringValue("{11, 20, BAND_2_4GHZ, 0}"));
+        wifiPhy.Set("ChannelSettings", StringValue("{36, 20, BAND_5GHZ, 0}"));
+        
+        if (RentryPackets){     
+            Config::SetDefault ("ns3::WifiMac::FrameRetryLimit", UintegerValue(FrameRetryLimit));
+            Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue ("0")); // Forzar RTS/CTS
+            Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold", StringValue (FragmentationThreshold)); // Desactiva fragmentación
+        }
 
-    anim.SetConstantPosition(wifiApNode.Get(0), 0.0, 0.0);
+        WifiMacHelper wifiMac;
+        Ssid ssid = Ssid("SDWN_PoFi_NS3");
 
-    // Rastreo
-    AsciiTraceHelper rastreo_ascii;
-    // wifiPhy.EnableAsciiAll(rastreo_ascii.CreateFileStream("scratch/tracers/SDWN_NS3_"+ std::to_string(nStaWifi) + "_DEVICES.tr"));
-    if (enablePcap) {
-        wifiPhy.EnablePcap("scratch/pcap/AP_DEVICE_SDWN_QoS_"+ std::to_string(nStaWifi)+"_DEVICES", wifiApDevice.Get(0));
-    }
-    
-    Simulator::Stop(Minutes(TimeSimulation + 0.5));
-    Simulator::Run();
+        // Configurar AP
+        NetDeviceContainer wifiApDevice;
+        wifiMac.SetType("ns3::ApWifiMac", 
+                        "Ssid", SsidValue(ssid), 
+                        "QosSupported", BooleanValue(true));
 
-    AnalyzeFlowMonitorResults(flowMonitor, classifier, nStaWifi);
-    flowMonitor->SerializeToXmlFile("scratch/flowmon/SDWN_PoFi_NS3_"+ std::to_string(nStaWifi) + "_DEVICES.xml", true, true);
-    
-    GlobalValue::Bind("SimulatorImplementationType", StringValue("ns3::RealtimeSimulatorImpl"));
-    Simulator::Destroy();
-    return 0;
+        wifiApDevice = wifi.Install(wifiPhy, wifiMac, wifiApNode.Get(0));
+
+        // Configurar estaciones con QoS
+        NetDeviceContainer wifiStaDevices;
+        WifiMacHelper staWifiMac;
+
+        for (uint32_t i = 0; i < nStaWifi; ++i) {
+            std::string AC = AcValues[i % AcValues.size()];
+            auto cfg = edcaParams[AC];
+
+            staWifiMac.SetType("ns3::StaWifiMac",
+                "Ssid", SsidValue(ssid),
+                "QosSupported", BooleanValue(true),
+                AC + "_MaxAmpduSize", UintegerValue(cfg.ampduSize),
+                "ActiveProbing", BooleanValue(false));
+
+            NetDeviceContainer staDev = wifi.Install(wifiPhy, staWifiMac, wifiStaNodes.Get(i));
+            Ptr<NetDevice> device = staDev.Get(0);
+            wifiStaDevices.Add(device);
+        
+            Ptr<WifiNetDevice> wifiDevice = DynamicCast<WifiNetDevice>(device);
+            Ptr<WifiMac> wifiMac = wifiDevice->GetMac();
+
+            PointerValue ptr;
+            wifiMac->GetAttribute(AC + "_Txop", ptr);
+            Ptr<QosTxop> edca = ptr.Get<QosTxop>();
+
+            if (edca) {
+                edca->SetAifsn(cfg.aifsn);
+                edca->SetMinCw(cfg.cwMin);
+                edca->SetMaxCw(cfg.cwMax);
+            }
+        }
+
+        InternetStackHelper internet;
+        internet.Install(wifiApNode);
+        internet.Install(wifiStaNodes);
+
+        Ipv4AddressHelper address;
+        address.SetBase("192.168.1.0", "255.255.255.0");
+        Ipv4InterfaceContainer staInterfaces = address.Assign(wifiStaDevices);
+        Ipv4InterfaceContainer apInterface = address.Assign(wifiApDevice);
+
+        // Crear el controlador SDN para el AP
+        PoFiApHelper pofiHelper(port);
+        ApplicationContainer pofiApps = pofiHelper.Install(wifiApNode);
+
+        pofiApps.Start(Seconds(0.0));
+        pofiApps.Stop(Minutes(TimeSimulation));
+
+        ApplicationContainer clientApps;
+        Time startTime = Seconds(1.0); // Tiempo inicial de inicio
+        Time delayBetweenStarts = MilliSeconds(25); // Retraso entre cada inicio de cliente
+        
+
+        for (uint32_t i = 0; i < wifiStaNodes.GetN(); ++i) {
+            uint32_t tosValue = TosValues[i % TosValues.size()];
+            std::string AC = AcValues[i % AcValues.size()];
+            uint32_t interval = IntervalValues[i % IntervalValues.size()];
+            uint32_t   MaxPackets = TimeSimulation * 60 / interval;
+
+            
+            UdpEchoClientHelper echoClient(apInterface.GetAddress(0), port);
+            echoClient.SetAttribute("MaxPackets", UintegerValue(MaxPackets));
+            echoClient.SetAttribute("Interval", TimeValue(Seconds(interval)));
+            echoClient.SetAttribute("PacketSize", UintegerValue(PacketSize));
+            echoClient.SetAttribute("Tos", UintegerValue(tosValue));
+            
+            ApplicationContainer app = echoClient.Install(wifiStaNodes.Get(i));
+            
+            app.Start(startTime);
+            app.Stop(Minutes(TimeSimulation+1));
+            
+            clientApps.Add(app);
+            startTime += delayBetweenStarts;
+            
+            //Sta_Information(i, tosValue, AC, staInterfaces, wifiStaDevices);
+        }
+        
+        
+        // Añadido para habilitar el monitoreo de flujo
+        Ptr<FlowMonitor> flowMonitor;
+        FlowMonitorHelper flowHelper;
+        flowMonitor = flowHelper.InstallAll();
+        Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowHelper.GetClassifier());
+
+        // Animación y rastreo
+        const std::string category = "BE"; // Cambiar según la prioridad deseada
+        const std::string packetsize = std::to_string(PacketSize);
+
+        const std::string filepath_xml = "scratch/Finals/xml/" + category + "/" + packetsize;
+        system(("mkdir -p " + filepath_xml).c_str());
+        
+        const std::string filename = "/SDWN_PoFi_NS3_"+ category + "_Priority_" + std::to_string(nStaWifi) + "_DEVICES_" +  packetsize +"_PacketSize_"+ std::to_string(TimeSimulation) +"_Min_ORIGINAL";
+        AnimationInterface anim(filepath_xml + filename + ".xml");
+        
+
+        anim.EnablePacketMetadata(true);
+        anim.UpdateNodeDescription(0, "Access Point");
+
+        anim.SetConstantPosition(wifiApNode.Get(0), 0.0, 0.0);
+
+        // Rastreo
+        AsciiTraceHelper rastreo_ascii;
+        // wifiPhy.EnableAsciiAll(rastreo_ascii.CreateFileStream("scratch/Finals/tracers/BK/SDWN_NS3_"+ std::to_string(PacketSize)+"_PacketSize_"+ std::to_string(nStaWifi) + "_DEVICES.tr"));
+        if (enablePcap) {
+            const std::string filepath_pcap = "scratch/Finals/pcap/" + category + "/" + packetsize;
+            system(("mkdir -p " + filepath_pcap).c_str());
+            wifiPhy.EnablePcap(filepath_pcap + filename, wifiApDevice.Get(0));
+        }
+        
+        Simulator::Stop(Minutes(TimeSimulation + 1.5));
+        Simulator::Run();
+
+        AnalyzeFlowMonitorResults(flowMonitor, classifier, nStaWifi);
+        const std::string filepath_flowmon = "scratch/Finals/flowmon/"+ category + "/" + packetsize;
+        system(("mkdir -p " + filepath_flowmon).c_str());
+        flowMonitor->SerializeToXmlFile(filepath_flowmon + filename + ".xml", true, true);
+        Simulator::Destroy();
+        
+        }
+	return 0;
 }
 
 // *********************************************************************************
 // ***************************** Implemented Functions *****************************
 // *********************************************************************************
-
-
-WifiMacHelper ConfigureQoS(WifiMacHelper wifiMac, Ssid ssid, std::string AC, UintegerValue maxAmpduSize) {
-    wifiMac.SetType("ns3::StaWifiMac",
-                    "Ssid", SsidValue(ssid),
-                    "QosSupported", BooleanValue(true),
-                    AC + "_MaxAmpduSize", maxAmpduSize,
-                    "ActiveProbing", BooleanValue(false));
-    return wifiMac;
-}
 
 void Sta_Information(uint32_t index, uint32_t tosValue, std::string ac, Ipv4InterfaceContainer staInterfaces, NetDeviceContainer wifiStaDevices) {
     // Obtener la dirección IP del nodo
@@ -608,8 +678,8 @@ void Sta_Information(uint32_t index, uint32_t tosValue, std::string ac, Ipv4Inte
     // Obtener la dirección MAC del nodo
     Ptr<NetDevice> staDevice = wifiStaDevices.Get(index);
     Ptr<WifiNetDevice> wifiStaDevice = DynamicCast<WifiNetDevice>(staDevice);
-    ns3::Address macAddr = wifiStaDevice->GetAddress();  // Obtén la dirección MAC como Address
-    Mac48Address macAddress = Mac48Address::ConvertFrom(macAddr);  // Convierte Address a Mac48Address
+    ns3::Address macAddr = wifiStaDevice->GetAddress();  
+    Mac48Address macAddress = Mac48Address::ConvertFrom(macAddr);  
 
     Ptr<WifiMac> macLayer = wifiStaDevice->GetMac();
     PointerValue ptr;
@@ -658,8 +728,6 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
     FlowId maxFlowId = 0;
     double latencySum = 0.0;
     double latencySquaredSum = 0.0;
-    double jitter = 0.0;
-    double lastDelay = 0.0;
     
     // Vectores para distribución
     std::vector<double> throughputs;
@@ -667,11 +735,25 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
     std::map<uint32_t, double> packetLossByFlow;
 
     // Crear archivo CSV
-    std::ofstream csvFile;
-    csvFile.open("scratch/statistics/SDWN_NS3_" + std::to_string(nStaWifi) + "_DEVICES.csv");
-    
+
+    // Nombre del archivo CSV con número de STAs
+    const std::string category = "BE";
+    const std::string packetsize = "256";
+    const std::string filepath_statistics = "scratch/Finals/estadisticas/" + category + "/" + packetsize;
+	system(("mkdir -p " + filepath_statistics).c_str());
+
+    const std::string filename = "/SDWN_NS3_PoFiStas_"+ category + "_Priority_" + std::to_string(nStaWifi) + "_DEVICES_" +  packetsize +"_PacketSize_30_Min_Original";
+	const std::string csvFilename = filepath_statistics + filename + ".csv";
+            
+
+    std::ofstream csvFile(csvFilename);
+    if (!csvFile.is_open()) {
+        std::cerr << "Error: no se pudo abrir el archivo CSV: " << csvFilename << std::endl;
+        return;
+    }
+
     // Encabezados CSV
-    csvFile << "FlowID,SourceAddress,DestAddress,Throughput(Kbps),Delay(ms),LostPackets,SentPackets,ReceivedPackets,Jitter(ms)\n";
+    csvFile << "FlowID,SourceAddress,DestAddress,Throughput(Kbps),Delay(ms),LostPackets,SentPackets,ReceivedPackets\n";
 
     // Procesar cada flujo
     for (const auto &flow : stats) {
@@ -679,28 +761,16 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
         auto flowStats = flow.second;
         auto flowClass = classifier->FindFlow(flowId);
 
-
         // Calcular throughput
         double throughput = 0.0;
         if (flowStats.timeLastRxPacket > flowStats.timeFirstTxPacket) {
             throughput = (flowStats.rxBytes * 8.0) / 
-                        (flowStats.timeLastRxPacket.GetSeconds() - flowStats.timeFirstTxPacket.GetSeconds()) / 
-                        1024; // Kbps
+                         (flowStats.timeLastRxPacket.GetSeconds() - flowStats.timeFirstTxPacket.GetSeconds()) / 
+                         1024; // Kbps
         }
 
         // Calcular delay
         double delay = (flowStats.rxPackets > 0) ? (flowStats.delaySum.GetSeconds() / flowStats.rxPackets) : 0.0;
-
-        // Calcular jitter
-        double flowJitter = 0.0;
-        if (flowStats.rxPackets > 1) {
-            for (uint32_t i = 1; i < flowStats.rxPackets; i++) {
-                double packetDelay = (flowStats.delaySum.GetSeconds() - lastDelay);
-                flowJitter += std::abs(packetDelay);
-                lastDelay = packetDelay;
-            }
-            flowJitter /= (flowStats.rxPackets - 1);
-        }
 
         // Actualizar métricas agregadas
         totalThroughput += throughput;
@@ -717,7 +787,6 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
         
         latencySum += delay;
         latencySquaredSum += delay * delay;
-        jitter += flowJitter;
 
         // Almacenar para distribución
         throughputs.push_back(throughput);
@@ -730,11 +799,10 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
                 << flowClass.sourceAddress << ","
                 << flowClass.destinationAddress << ","
                 << std::fixed << std::setprecision(2) << throughput << ","
-                << std::fixed << std::setprecision(2) << delay * 1000 << ","
+                << delay * 1000 << ","  // en ms
                 << flowStats.lostPackets << ","
                 << flowStats.txPackets << ","
-                << flowStats.rxPackets << ","
-                << std::fixed << std::setprecision(2) << flowJitter * 1000 << "\n";
+                << flowStats.rxPackets << "\n";
 
         // Mostrar por consola
         std::cout << "Flujo ID: " << flowId
@@ -743,7 +811,6 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
                   << ", Hacia: " << flowClass.destinationAddress
                   << "\n\tTasa de transferencia: " << throughput << " Kbps"
                   << "\n\tLatencia promedio: " << delay * 1000 << " ms"
-                  << "\n\tJitter: " << flowJitter * 1000 << " ms"
                   << "\n\tPérdida de paquetes: " << flowStats.lostPackets << " (" 
                   << packetLossByFlow[flowId] << "%)"
                   << "\n\tPaquetes enviados: " << flowStats.txPackets
@@ -756,7 +823,6 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
     double meanLatency = stats.size() > 0 ? latencySum / stats.size() : 0.0;
     double variance = stats.size() > 0 ? (latencySquaredSum / stats.size()) - (meanLatency * meanLatency) : 0.0;
     double stddevLatency = std::sqrt(variance);
-    double averageJitter = stats.size() > 0 ? jitter / stats.size() : 0.0;
 
     // Escribir resumen en CSV
     csvFile << "\nResumen General\n";
@@ -764,7 +830,6 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
     csvFile << "Tasa de transferencia total (Kbps)," << totalThroughput << "\n";
     csvFile << "Latencia promedio (ms)," << averageDelay * 1000 << "\n";
     csvFile << "Desviación estándar latencia (ms)," << stddevLatency * 1000 << "\n";
-    csvFile << "Jitter promedio (ms)," << averageJitter * 1000 << "\n";
     csvFile << "Porcentaje de pérdida de paquetes (%)," << packetLossRate << "\n";
     csvFile << "Tasa de transferencia máxima (Kbps)," << maxThroughput << "\n";
     csvFile << "Flujo con máximo throughput," << maxFlowId << "\n";
@@ -777,7 +842,6 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
     std::cout << "Tasa de transferencia total: " << totalThroughput << " Kbps\n";
     std::cout << "Latencia promedio: " << averageDelay * 1000 << " ms\n";
     std::cout << "Desviación estándar de la latencia: " << stddevLatency * 1000 << " ms\n";
-    std::cout << "Jitter promedio: " << averageJitter * 1000 << " ms\n";
     std::cout << "Porcentaje de pérdida de paquetes: " << packetLossRate << " %\n";
     std::cout << "Tasa de transferencia máxima: " << maxThroughput << " Kbps (Flujo ID: " << maxFlowId << ")\n";
     std::cout << "Total paquetes enviados: " << totalPacketsSent << "\n";
