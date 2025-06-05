@@ -88,7 +88,7 @@ Por cada categoría de acceso y tamaño de paquete:
 
 Estas métricas se guardan en archivos CSV por cada combinación de:
 
-- Tamaño de paquete: `256, 512, 1024, 2048`.
+- Tamaño de paquete: `256, 512, 1024`.
 - Categoría de tráfico: `VO, VI, BE, BK`.
 
 ---
