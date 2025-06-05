@@ -53,6 +53,6 @@ keywords:
   - IoT Systems
   - Message Traffic Management
 license: MIT
-commit: 1ae1d57b04ecddcb9b9416339c83fcffefc362a3
+commit: c5f3d80facd5c1f1419d1204d9b528b4fbc154a1
 version: '3.0'
 date-released: '2025-06-02'
