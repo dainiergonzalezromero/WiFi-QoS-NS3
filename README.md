@@ -93,17 +93,6 @@ Estas métricas se guardan en archivos CSV por cada combinación de:
 
 ---
 
-## 🐍 Análisis y visualización de datos
-
-Se proporciona una herramienta Python (Tkinter + matplotlib) que permite:
-
-- Cargar métricas desde los CSV.
-- Elegir tipo de gráfico: `líneas`, `barras`, `boxplot`.
-- Filtrar por tipo de tráfico y métrica.
-- Exportar la gráfica a imagen (`.png`).
-
----
-
 ## 🚀 Ejecución
 
 ```bash
