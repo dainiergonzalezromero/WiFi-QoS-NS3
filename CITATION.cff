@@ -21,7 +21,6 @@ type: software
 authors:
   - given-names: Dainier
     family-names: González Romero
-    name-particle: Dainier
     email: dainier.gonzalez@cs.uns.edu.ar
     affiliation: >-
       Instituto de Ciencias e Ingenieria de la Computacion
