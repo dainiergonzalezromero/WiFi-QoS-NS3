@@ -104,13 +104,15 @@ These metrics are saved in CSV files for each combination of:
 - Simulation duration.
 - TXOP allocation algorithm.
 
-## 📁 Project structure
-scratch/Finals/
-├── sdwn.cc                 # Main simulation
-├── flowmon/                # Node statistics by service class
-├── xml/                    # Visualization of simulations by service class
-├── statistics/           # Results in CSV by service class
-└── pcap/                   # Packet capture by service class
+## 📁 Project Structure
+- `sdwn.cc`: Main source code file. Includes:
+  - `main()` function
+  - Implementation of `PoFiController`
+  - Implementation of `PoFiAp`
+- `LICENSE`: MIT software license.
+- `README.md`: This file, with instructions and project description.
+- `CITATION.cff`: Academic citation file in CFF (Citation File Format).
+
 
 ## 🛠 Requirements
 - NS-3 (verified in version 3.44)
