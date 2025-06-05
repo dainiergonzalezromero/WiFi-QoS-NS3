@@ -96,7 +96,7 @@ Estas métricas se guardan en archivos CSV por cada combinación de:
 ## 🚀 Ejecución
 
 ```bash
-./waf --run scratch/Finals/pofi-sim
+./waf --run scratch/sdwn
 ```
 ## Parámetros configurables:
 - Número de estaciones.
