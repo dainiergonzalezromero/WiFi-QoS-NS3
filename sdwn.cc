@@ -126,8 +126,8 @@ class PoFiAp : public Application {
 		};
 
 		std::map<std::string, EdcaConfig> edcaParams = {
-    		{"VO", {2, 3, 7, 8192}},
-    		{"VI", {2, 7, 15, 16384}},
+    		{"VO", {2, 15, 1023, 8192}},
+    		{"VI", {2, 15, 1023, 16384}},
     		{"BE", {3, 15, 1023, 32768}},
     		{"BK", {7, 15, 1023, 65535}}
 		};
@@ -427,12 +427,12 @@ class PoFiApHelper {
 // *********************************************************************************
 // ******************************* Global Variables ********************************
 // *********************************************************************************
-uint8_t     factor      = 10;
+uint8_t     factor      = 10; // 1- 10
 double      radio       = 50.0;
 uint16_t    port        = 8080;
-uint16_t    PacketSize  = 256;
+uint16_t    PacketSize  = 256; // 256,512,1024
 bool        enablePcap  = true;
-uint16_t    TimeSimulation = 30;
+uint16_t    TimeSimulation = 30; //10,20,30
 
 uint8_t		FrameRetryLimit	= 7;
 bool 		RentryPackets 	= false;
@@ -450,8 +450,8 @@ struct EdcaConfig {
 };
 
 std::map<std::string, EdcaConfig> edcaParams = {
-    {"VO", {2, 3, 7, 8192}},
-    {"VI", {2, 7, 15, 16384}},
+    {"VO", {2, 15, 1023, 8192}},
+    {"VI", {2, 15, 1023, 16384}},
     {"BE", {3, 15, 1023, 32768}},
     {"BK", {7, 15, 1023, 65535}}
 };
