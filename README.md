@@ -15,17 +15,6 @@ Este proyecto implementa un entorno de simulación en NS-3 que combina conceptos
 - Simular un ecosistema WiFi cognitivo con SDN.
 - Analizar el comportamiento de tráfico diferenciado (VoIP, video, Best Effort, Background).
 - Evaluar métricas clave: **Throughput**, **Delay**, **Lost Packets**.
-- Visualizar estadísticas con una herramienta de análisis en Python + Tkinter.
-
----
-
-## 🧱 Arquitectura General
-
-+------------------+ +-----------------------+ +------------------+
-| Estaciones | <---------> | PoFiAp (AP) | <--------> | PoFiController |
-+------------------+ +-----------------------+ +------------------+
-WiFi Clasificación, QoS SDN: políticas
-EDCA, métricas y reenvío
 
 ---
 
