@@ -1,3 +1,9 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Dainier González Romero
+// Este archivo forma parte de PoFi-SDN-WiFi: Simulation of a Cognitive Access Point with SDN and QoS 
+// Licenciado bajo la Licencia MIT (ver LICENSE para más detalles).
+
+
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
