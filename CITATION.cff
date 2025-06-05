@@ -1,0 +1,58 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  PoFi-SDN-WiFi: Simulation of a Cognitive Access Point with
+  SDN and QoS
+message: >-
+  This project implements a simulation environment in NS-3
+  that combines SDN (Software Defined Networking) concepts
+  with IEEE 802.11 WiFi networks using QoS based on EDCA
+  (Enhanced Distributed Channel Access). It focuses on the
+  creation of an intelligent access point (PoFiAp) which,
+  together with an SDN controller (PoFiController), allows: 
+  - Classification of packets according to priority
+  (ToS/DSCP). - Queuing by traffic type. - Dynamic
+  allocation of **TXOP**. - Collection of detailed metrics
+  by class of service. - Application of SDN policies via
+  PacketIn/FlowMod messages.
+type: software
+authors:
+  - given-names: Dainier
+    family-names: González Romero
+    name-particle: Dainier
+    email: dainier.gonzalez@cs.uns.edu.ar
+    affiliation: >-
+      Instituto de Ciencias e Ingenieria de la Computacion
+      (ICIC) - Consejo Nacional de Investigaciones
+      Científicas y Técnicas (CONICET) - Universidad
+      Nacional del Sur (UNS)
+    orcid: 'https://orcid.org/0000-0002-2932-4389'
+  - given-names: Rodrigo Martín
+    family-names: Santos
+    email: ierms@criba.edu.ar
+    affiliation: >-
+      Departamento de Ingeniería Eléctrica y de Computadoras
+      (DIEC) - Instituto de Ciencias e Ingenieria de la
+      Computacion (ICIC) - Consejo Nacional de
+      Investigaciones Científicas y Técnicas (CONICET) -
+      Universidad Nacional del Sur (UNS)
+    orcid: 'https://orcid.org/0000-0003-0382-477X'
+  - given-names: Sergio F.
+    family-names: Ochoa
+    orcid: 'https://orcid.org/0000-0002-0431-8767'
+    affiliation: 'Computer Science Department, Universidad de Chile'
+    email: sochoa@dcc.uchile.cl
+repository-code: 'https://github.com/dainiergonzalezromero/WiFi-QoS-NS3.git'
+url: 'https://github.com/dainiergonzalezromero/WiFi-QoS-NS3'
+abstract: "This project implements a simulation environment in NS-3 that combines SDN (Software Defined Networking) concepts with IEEE 802.11 WiFi networks using QoS based on EDCA (Enhanced Distributed Channel Access). It focuses on the creation of an intelligent access point (PoFiAp) which, together with an SDN controller (PoFiController), allows:\n- Classification of packets according to priority (ToS/DSCP).\n- Queuing by traffic type.\n- Dynamic allocation of TXOP.\n- Collection of detailed metrics by class of service.\n- Application of SDN policies via PacketIn/FlowMod messages.\n\U0001F3AF Objectives\n- Simulate a cognitive WiFi ecosystem with SDN.\n- Analyze differentiated traffic behavior (VoIP, video, Best Effort, Background).\n- Evaluate key metrics: Throughput, Delay, Lost Packets."
+keywords:
+  - Software Defined Wireless Networks
+  - Quality of Service
+  - IoT Systems
+  - Message Traffic Management
+license: MIT
+commit: 1ae1d57b04ecddcb9b9416339c83fcffefc362a3
+version: '3.0'
+date-released: '2025-06-02'
