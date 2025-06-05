@@ -130,7 +130,15 @@ class PoFiAp : public Application {
     		{"VI", {2, 15, 1023, 16384}},
     		{"BE", {3, 15, 1023, 32768}},
     		{"BK", {7, 15, 1023, 65535}}
-		};
+		};  
+		/* Values modified to behave like BE, but with different TiD. The default values are:
+		| TiD | AIFSN | CwMin | CwMax | AMPDU Duration |
+		| --- | ----- | ----- | ----- | -------------- |
+		| VO  | 2     | 3     | 7     | 8192           |
+		| VI  | 2     | 7     | 15    | 16384          |
+		| BE  | 3     | 15    | 1023  | 32768          |
+		| BK  | 7     | 15    | 1023  | 65535          |
+		*/
 
     private:
         Ptr<Socket> m_socket;
@@ -455,7 +463,14 @@ std::map<std::string, EdcaConfig> edcaParams = {
     {"BE", {3, 15, 1023, 32768}},
     {"BK", {7, 15, 1023, 65535}}
 };
-
+/* Values modified to behave like BE, but with different TiD. The default values are:
+| TiD | AIFSN | CwMin | CwMax | AMPDU Duration |
+| --- | ----- | ----- | ----- | -------------- |
+| VO  | 2     | 3     | 7     | 8192           |
+| VI  | 2     | 7     | 15    | 16384          |
+| BE  | 3     | 15    | 1023  | 32768          |
+| BK  | 7     | 15    | 1023  | 65535          |
+*/
 // *********************************************************************************
 // *********************************** Functions ***********************************
 // *********************************************************************************
