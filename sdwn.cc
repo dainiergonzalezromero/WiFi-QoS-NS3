@@ -90,7 +90,7 @@ class PoFiAp : public Application {
         }
         
         void PrintRoutingTable() {
-            std::cout << "Tabla de Enrutamiento del Nodo AP:" << std::endl;
+            std::cout << "AP Node Routing Table:" << std::endl;
             Ptr<OutputStreamWrapper> stream = Create<OutputStreamWrapper>(&std::cout);
             m_apIpv4->GetRoutingProtocol()->PrintRoutingTable(stream, Time::S);
         }
