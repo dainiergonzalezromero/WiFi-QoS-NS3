@@ -438,7 +438,7 @@ uint8_t		FrameRetryLimit	= 7;
 bool 		RentryPackets 	= false;
 std::string	FragmentationThreshold = "2200";
 
-std::vector<uint32_t> IntervalValues= { 20,  30,  30,  20,   10,   10,   1,   1};
+std::vector<uint32_t> IntervalValues= { 10,  10,  10,  10,   5,   5,   1,   1};
 std::vector<std::string> AcValues   = {"BE", "BK", "BK", "BE", "VI", "VI", "VO", "VO"};
 std::vector<uint32_t> TosValues     = {0x00, 0x20, 0x40, 0x60, 0x80, 0xa0, 0xc0, 0xe0};
 
