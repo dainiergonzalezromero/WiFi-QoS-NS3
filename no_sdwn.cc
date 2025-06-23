@@ -23,10 +23,10 @@ using namespace ns3;
 uint8_t                 factor             = 10;
 double                  radio              = 50.0;
 uint16_t                port               = 8080;
-std::vector<uint32_t>   PacketsSize        = {1024};
+std::vector<uint32_t>   PacketsSize        = {256,512,1024};
 bool                    enablePcap         = true;
 uint16_t                TimeSimulation     = 10;
-uint8_t		            interval	       = 1;
+uint8_t		        interval	   = 1;
 uint32_t                MaxPackets         = TimeSimulation * 60 / interval;	
 const std::string       category           = "NO-SDWN"; 
 Time                    delayBetweenStarts = MilliSeconds(25); 
@@ -57,8 +57,8 @@ int main(int argc, char* argv[]) {
     SeedManager::SetSeed(time(NULL)); // Usa el tiempo actual como semilla base (aleatorio)
     
     for (auto PacketSize : PacketsSize) {
-        for (uint32_t i = 9; i <= 9; ++i) {
-            for (uint32_t Corrida = 10; Corrida <= nCorrida; ++Corrida) {
+        for (uint32_t i = 1; i <= factor; ++i) {
+            for (uint32_t Corrida = 1; Corrida <= nCorrida; ++Corrida) {
             
             SeedManager::SetRun(Corrida); // Para tener una secuencia diferente en cada corrida
             
