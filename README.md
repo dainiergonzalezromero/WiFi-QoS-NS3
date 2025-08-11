@@ -96,7 +96,7 @@ These metrics are saved in CSV files for each combination of:
 ## 🚀 Execution
 
 ```bash
-./waf --run scratch/sdwn
+./ns3 --run scratch/sdwn
 ```
 ## Configurable parameters:
 - Number of stations.
