@@ -502,7 +502,7 @@ int main(int argc, char* argv[]) {
     	//LogComponentEnable("UdpEchoServerApplication", LOG_LEVEL_INFO);
 
         // Crear nodos
-        uint16_t    nStaWifi    = i * 10;
+        uint16_t    nStaWifi    = factor * 10;
         std::cout << "Realizando analisis para " << nStaWifi << " Dispositivos." << std::endl;
 
         NodeContainer wifiApNode;
