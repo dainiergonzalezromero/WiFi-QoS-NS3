@@ -85,8 +85,7 @@ scratch/
 ├── results/               # Output CSVs per experiment
 │   ├── Run_XX.csv
 │   └── ...
-└── analysis/
-    └── analyze_results.py  # Python tool to consolidate and aggregate results
+└── analyze_results.py  # Python tool to consolidate and aggregate results
 ```
 
 ---
