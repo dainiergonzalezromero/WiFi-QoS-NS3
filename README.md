@@ -175,10 +175,10 @@ The final summary includes the following columns:
 
 ```bash
 # Step 1 – Run all simulations in parallel
-python3 sdwn_parallel.py
+python3 sdwn_parallel.py &
 
 # Step 2 – Analyze results and generate summaries
-python3 analysis/analyze_results.py
+python3 analyze_results.py
 ```
 
 Results:
