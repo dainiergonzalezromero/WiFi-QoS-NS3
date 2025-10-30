@@ -95,7 +95,7 @@ scratch/
 
 ### 1️⃣ Run the simulation in NS-3
 ```bash
-./ns3 run scratch/sdwn
+./ns3 run "scratch/sdwn --nStaH=15 --nStaM=15 --nStaL=15 --nStaNRT=15 --CwMinH=63 --CwMaxH=1023 --CwMinM=7 --CwMaxM=255 --CwMinL=15 --CwMaxL=1023 --CwMinNRT=31 --CwMaxNRT=1023 --PacketSize=512 --TimeSimulationMin=3 --nCorrida=3"
 ```
 
 Parameters configurable in the script:
@@ -110,13 +110,13 @@ Parameters configurable in the script:
 
 #### Sequential mode
 ```bash
-python3 sdwn.py
+python3 sdwn.py &
 ```
 Runs all parameter combinations one after another.
 
 #### Parallel mode (recommended)
 ```bash
-python3 sdwn_parallel.py
+python3 sdwn_parallel.py &
 ```
 Executes multiple NS-3 instances concurrently using multiprocessing — ideal for large experimental batches.
 
