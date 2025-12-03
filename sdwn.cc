@@ -689,6 +689,21 @@ int main(int argc, char* argv[]) {
         Sta_Information(i, tosValue, AC, staInterfaces, wifiStaDevices);
     }
 
+    // Directorio base para PCAP
+    const std::string pcapBasePath = "scratch/Estadisticas/" + category + "/1S/Modified/" + std::to_string(nStaWifi) + "/" + std::to_string(PacketSize) + "/pcap/";
+    fs::create_directories(pcapBasePath);
+
+    // Nombres específicos para diferentes interfaces
+    const std::string pcapPrefix = "SDWN_" + category + "_" + std::to_string(nStaWifi) + "STA_" + 
+                                std::to_string(PacketSize) + "B_" +
+                                "CWMin(" + std::to_string(CwMinH) + "-" + std::to_string(CwMinM) + 
+                                "-" + std::to_string(CwMinL) + "-" + std::to_string(CwMinNRT) + ")" +
+                                "_CWMax(" + std::to_string(CwMaxH) + "-" + std::to_string(CwMaxM) + 
+                                "-" + std::to_string(CwMaxL) + "-" + std::to_string(CwMaxNRT) + ")" +
+                                "_Run" + std::to_string(nCorrida);
+
+    wifiPhy.EnablePcap(pcapBasePath + pcapPrefix + "_wifi", wifiApNode);
+
     Ptr<FlowMonitor> flowMonitor;
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
@@ -775,7 +790,7 @@ void AnalyzeFlowMonitorResults(Ptr<FlowMonitor> flowMonitor, Ptr<Ipv4FlowClassif
     // Crear archivo CSV
 
     // Nombre del archivo CSV con número de STAs
-    const std::string filepath_statistics = "scratch/Finals/estadisticas/" + category + "/1S/Modified/" + packetsize;
+    const std::string filepath_statistics = "scratch/Estadisticas/" + category + "/1S/Modified/" +"/"+ std::to_string(nStaWifi) +"/"+ packetsize;
     fs::create_directories(filepath_statistics);
 
     const std::string filename = "/SDWN_" + category + "_" +std::to_string(nStaWifi) + "STA_" + packetsize + "B_" +"CWMin(" + std::to_string(CwMinH) + "-" + std::to_string(CwMinM)+ "-" + std::to_string(CwMinL) + "-" + std::to_string(CwMinNRT) + ")" +"_CWMax(" + std::to_string(CwMaxH) + "-" + std::to_string(CwMaxM)+ "-" + std::to_string(CwMaxL) + "-" + std::to_string(CwMaxNRT) + ")" + "_Run" + std::to_string(nCorrida);
