@@ -263,11 +263,11 @@ and the following research article:
 
 **Author:**
 
-> *Dainier González Romero*
-> Ingeniero en Telecomunicaciones y Electrónica.
-> Instituto de Ciencias e Ingeniería de la Computación (ICIC).
-> Departamento de Ingeniería Eléctrica y Computadoras (DIEC).
-> Universidad Nacional del Sur.
+> 🧑‍💻 *Dainier González Romero* <br>
+> Ingeniero en Telecomunicaciones y Electrónica. <br>
+> Instituto de Ciencias e Ingeniería de la Computación (ICIC). <br>
+> Departamento de Ingeniería Eléctrica y Computadoras (DIEC). <br>
+> Universidad Nacional del Sur. <br>
 > Bahía Blanca, Buenos Aires, Argentina.
 ---
 
