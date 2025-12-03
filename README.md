@@ -253,17 +253,21 @@ The final summary includes the following columns:
 
 ## 📚 Academic Context
 
-Developed as part of the **Doctoral Thesis**:  
-> “Design and Development of Digital Ecosystems for Cognitive IoT:  
+Developed as part of the **Doctoral Thesis**:
+> “Design and Development of Digital Ecosystems for Cognitive IoT:
 > Software-Defined Networks as a Planning Tool”
 
-**Author:**  
-🧑‍💻 *Dainier Gonzalez Romero*  
+and the following research article:
+
+> [1] **González Romero, D.; Ochoa, S.F.; Santos, R.** (2025). *"Context-Aware Software-Defined Wireless Networks: A Proposal Focused on QoS"*. Future Internet (MDPI).
+
+**Author:**
+🧑‍💻 *Dainier Gonzalez Romero*
 Ingeniero en Telecomunicaciones y Electrónica.
 Instituto de Ciencias e Ingeniería de la Computación (ICIC).
 Departamento de Ingeniería Eléctrica y Computadoras (DIEC).
-Universidad Nacional del Sur. 
-Bahía Blanca. Buenos Aires. Argentina
+Universidad Nacional del Sur.
+Bahía Blanca, Buenos Aires, Argentina.
 ---
 
 ## 📜 License
