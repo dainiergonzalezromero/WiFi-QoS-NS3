@@ -259,10 +259,11 @@ Developed as part of the **Doctoral Thesis**:
 
 **Author:**  
 🧑‍💻 *Dainier Gonzalez Romero*  
-Institute of Computer Science and Engineering (ICIC)  
-National Council for Scientific and Technical Research (CONICET)  
-National University of the South (UNS)
-
+Ingeniero en Telecomunicaciones y Electrónica.
+Instituto de Ciencias e Ingeniería de la Computación (ICIC).
+Departamento de Ingeniería Eléctrica y Computadoras (DIEC).
+Universidad Nacional del Sur. 
+Bahía Blanca. Buenos Aires. Argentina
 ---
 
 ## 📜 License
