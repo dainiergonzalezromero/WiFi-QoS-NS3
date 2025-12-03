@@ -262,13 +262,21 @@ and the following research article:
 > [1] **González Romero, D.; Ochoa, S.F.; Santos, R.** (2025). *"Context-Aware Software-Defined Wireless Networks: A Proposal Focused on QoS"*. Future Internet (MDPI).
 
 **Author:**
+
 🧑‍💻 *Dainier Gonzalez Romero*
+
 Ingeniero en Telecomunicaciones y Electrónica.
+
 Instituto de Ciencias e Ingeniería de la Computación (ICIC).
+
 Departamento de Ingeniería Eléctrica y Computadoras (DIEC).
+
 Universidad Nacional del Sur.
+
 Bahía Blanca, Buenos Aires, Argentina.
+
 ---
+
 
 ## 📜 License
 
