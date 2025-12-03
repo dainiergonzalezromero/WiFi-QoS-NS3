@@ -3,20 +3,14 @@
 
 cff-version: 1.2.0
 title: >-
-  PoFi-SDN-WiFi: Simulation of a Cognitive Access Point with
-  SDN and QoS
+  PoFi-SDN-WiFi: AI-Driven Knowledge-Defined Wireless Network (KDWN) Framework
 message: >-
-  This project implements a simulation environment in NS-3
-  that combines SDN (Software Defined Networking) concepts
-  with IEEE 802.11 WiFi networks using QoS based on EDCA
-  (Enhanced Distributed Channel Access). It focuses on the
-  creation of an intelligent access point (PoFiAp) which,
-  together with an SDN controller (PoFiController), allows: 
-  - Classification of packets according to priority
-  (ToS/DSCP). - Queuing by traffic type. - Dynamic
-  allocation of **TXOP**. - Collection of detailed metrics
-  by class of service. - Application of SDN policies via
-  PacketIn/FlowMod messages.
+  If you use this software, please cite it using the
+  metadata from this file. This project implements a KDWN
+  framework in NS-3 that integrates SDN, IEEE 802.11e QoS,
+  and an Intelligent Agent (Random Forest + Bayesian
+  Optimization) to dynamically tune network parameters for
+  dense IoT environments.
 type: software
 authors:
   - given-names: Dainier
@@ -45,13 +39,17 @@ authors:
     email: sochoa@dcc.uchile.cl
 repository-code: 'https://github.com/dainiergonzalezromero/WiFi-QoS-NS3.git'
 url: 'https://github.com/dainiergonzalezromero/WiFi-QoS-NS3'
-abstract: "This project implements a simulation environment in NS-3 that combines SDN (Software Defined Networking) concepts with IEEE 802.11 WiFi networks using QoS based on EDCA (Enhanced Distributed Channel Access). It focuses on the creation of an intelligent access point (PoFiAp) which, together with an SDN controller (PoFiController), allows:\n- Classification of packets according to priority (ToS/DSCP).\n- Queuing by traffic type.\n- Dynamic allocation of TXOP.\n- Collection of detailed metrics by class of service.\n- Application of SDN policies via PacketIn/FlowMod messages.\n\U0001F3AF Objectives\n- Simulate a cognitive WiFi ecosystem with SDN.\n- Analyze differentiated traffic behavior (VoIP, video, Best Effort, Background).\n- Evaluate key metrics: Throughput, Delay, Lost Packets."
+abstract: "This project implements a Knowledge-Defined Wireless Network (KDWN) framework in NS-3 that combines SDN (Software Defined Networking) and IEEE 802.11e QoS with an Intelligent Agent (IA). The system focuses on a Cognitive Access Point (PoFiAp) controlled by an SDN Controller (PoFiController) and optimized by a Knowledge Plane. Key capabilities include:\n- Protocol-oblivious packet classification (ToS/DSCP).\n- Dynamic allocation of TXOP and EDCA parameters.\n- AI-Driven Optimization using Random Forest and Bayesian Optimization (TPE).\n- Closed-loop adaptation to network topology changes.\n- Python-based automation suite for massive parallel simulation.\n\U0001F3AF Objectives\n- Validate KDWN architecture for dense IoT scenarios.\n- Achieve near-zero packet loss through dynamic parameter tuning.\n- Evaluate metrics: Throughput, Delay, and Loss per Access Category."
 keywords:
-  - Software Defined Wireless Networks
+  - Knowledge-Defined Networking
+  - Artificial Intelligence
+  - Machine Learning
+  - Bayesian Optimization
+  - Software-Defined Wireless Networks
+  - IEEE 802.11e EDCA
   - Quality of Service
+  - NS-3
   - IoT Systems
-  - Message Traffic Management
 license: MIT
-commit: c5f3d80facd5c1f1419d1204d9b528b4fbc154a1
 version: '3.0'
-date-released: '2025-06-05'
+date-released: '2025-12-03'
