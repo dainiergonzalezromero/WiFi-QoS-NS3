@@ -1,6 +1,6 @@
 # 🧠 PoFi-SDN-WiFi: AI-Driven KDWN with SDN and QoS (EDCA)
 <p align="center">
-  <img src="PDF_Graficas/Captura desde 2026-03-06 18-43-10.png">
+  <img src="PDF_Graficas/Captura desde 2026-03-06 18-43-10.png"width="600">
 </p>
 This project implements an advanced **simulation and optimization framework** in NS-3 that combines **Software Defined Networking (SDN)**, **IEEE 802.11e WiFi QoS (EDCA)**, and **Machine Learning** to create a **Knowledge-Defined Wireless Network (KDWN)**.
 
