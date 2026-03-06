@@ -1,0 +1,55 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  PoFi-SDN-WiFi: AI-Driven Knowledge-Defined Wireless Network (KDWN) Framework
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file. This project implements a KDWN
+  framework in NS-3 that integrates SDN, IEEE 802.11e QoS,
+  and an Intelligent Agent (Random Forest + Bayesian
+  Optimization) to dynamically tune network parameters for
+  dense IoT environments.
+type: software
+authors:
+  - given-names: Dainier
+    family-names: González Romero
+    email: dainier.gonzalez@cs.uns.edu.ar
+    affiliation: >-
+      Instituto de Ciencias e Ingenieria de la Computacion
+      (ICIC) - Consejo Nacional de Investigaciones
+      Científicas y Técnicas (CONICET) - Universidad
+      Nacional del Sur (UNS)
+    orcid: 'https://orcid.org/0000-0002-2932-4389'
+  - given-names: Rodrigo Martín
+    family-names: Santos
+    email: ierms@criba.edu.ar
+    affiliation: >-
+      Departamento de Ingeniería Eléctrica y de Computadoras
+      (DIEC) - Instituto de Ciencias e Ingenieria de la
+      Computacion (ICIC) - Consejo Nacional de
+      Investigaciones Científicas y Técnicas (CONICET) -
+      Universidad Nacional del Sur (UNS)
+    orcid: 'https://orcid.org/0000-0003-0382-477X'
+  - given-names: Sergio F.
+    family-names: Ochoa
+    orcid: 'https://orcid.org/0000-0002-0431-8767'
+    affiliation: 'Computer Science Department, Universidad de Chile'
+    email: sochoa@dcc.uchile.cl
+repository-code: 'https://github.com/dainiergonzalezromero/WiFi-QoS-NS3.git'
+url: 'https://github.com/dainiergonzalezromero/WiFi-QoS-NS3'
+abstract: "This project implements a Knowledge-Defined Wireless Network (KDWN) framework in NS-3 that combines SDN (Software Defined Networking) and IEEE 802.11e QoS with an Intelligent Agent (IA). The system focuses on a Cognitive Access Point (PoFiAp) controlled by an SDN Controller (PoFiController) and optimized by a Knowledge Plane. Key capabilities include:\n- Protocol-oblivious packet classification (ToS/DSCP).\n- Dynamic allocation of TXOP and EDCA parameters.\n- AI-Driven Optimization using Random Forest and Bayesian Optimization (TPE).\n- Closed-loop adaptation to network topology changes.\n- Python-based automation suite for massive parallel simulation.\n\U0001F3AF Objectives\n- Validate KDWN architecture for dense IoT scenarios.\n- Achieve near-zero packet loss through dynamic parameter tuning.\n- Evaluate metrics: Throughput, Delay, and Loss per Access Category."
+keywords:
+  - Knowledge-Defined Networking
+  - Artificial Intelligence
+  - Machine Learning
+  - Bayesian Optimization
+  - Software-Defined Wireless Networks
+  - IEEE 802.11e EDCA
+  - Quality of Service
+  - NS-3
+  - IoT Systems
+license: MIT
+version: '3.0'
+date-released: '2025-12-03'
