@@ -24,9 +24,9 @@ NS_LOG_COMPONENT_DEFINE("SDWN_PoFi_NS3");
 
 
 // *********************************************************************************
-// ********************************* PoFiController ********************************
+// ********************************* KDNController ********************************
 // *********************************************************************************
-class PoFiController {
+class KDNController {
     public:
         enum Priority { HIGH, MEDIUM, LOW };
     
@@ -36,7 +36,7 @@ class PoFiController {
         };
     
         FlowMod PacketIn(uint8_t tos, Ipv4Address staIp) {
-            NS_LOG_INFO("[PoFiController] Received PacketIn from PoFiAp (Station: " 
+            NS_LOG_INFO("[KDNController] Received PacketIn from PoFiAp (Station: " 
                 << staIp << ", ToS: 0x" << std::hex << uint32_t(tos) << ")");
     
             FlowMod mod;
@@ -51,7 +51,7 @@ class PoFiController {
 				mod.txopLimit = 0;    // Best Effort
 			}
     
-            NS_LOG_INFO("[PoFiController] Send FlowMod to PoFiAp (Station: " << staIp << ", ToS: 0x" << std::hex << uint32_t(tos) 
+            NS_LOG_INFO("[KDNController] Send FlowMod to PoFiAp (Station: " << staIp << ", ToS: 0x" << std::hex << uint32_t(tos) 
                          << ", Priority:  " << (mod.priority == HIGH ? "HIGH )" :
                                             mod.priority == MEDIUM ? "MEDIUM )" : "LOW )")) ;
             return mod;
@@ -132,7 +132,7 @@ class PoFiAp : public Application {
             double jitterTotal = 0.0;
         };
         
-        std::map<PoFiController::Priority, Metrics> metricsMap;
+        std::map<KDNController::Priority, Metrics> metricsMap;
 
 		struct EdcaConfig {
     		uint32_t aifsn;
@@ -158,7 +158,7 @@ class PoFiAp : public Application {
         std::queue<QueueItem> lowPriorityQueue;
         
         std::map<Ipv4Address, uint8_t> tosMap;
-        std::map<uint8_t, PoFiController::FlowMod> tosRegistry;
+        std::map<uint8_t, KDNController::FlowMod> tosRegistry;
         bool isProcessing = false;
         
         void Ipv4PacketReceived(Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface) {
@@ -170,8 +170,8 @@ class PoFiAp : public Application {
             uint8_t tos = ipHeader.GetTos();
             tosMap[src] = tos;
         
-            PoFiController::Priority priority = tosRegistry.count(tos) ? 
-                tosRegistry[tos].priority : PoFiController::LOW;
+            KDNController::Priority priority = tosRegistry.count(tos) ? 
+                tosRegistry[tos].priority : KDNController::LOW;
         
             metricsMap[priority].packetsReceived++;
             metricsMap[priority].bytesReceived += packet->GetSize();
@@ -186,14 +186,14 @@ class PoFiAp : public Application {
                 InetSocketAddress addr = InetSocketAddress::ConvertFrom(from);
                 Ipv4Address sender = addr.GetIpv4();
                 uint8_t tos = tosMap[sender];
-                PoFiController::FlowMod entry; 
+                KDNController::FlowMod entry; 
         
                 if (tosRegistry.find(tos) == tosRegistry.end()) {
-                    PoFiController controller;
-                    NS_LOG_INFO("[PoFiAp] Send PacketIn to PoFiController with ToS: 0x" << std::hex << uint32_t(tos));
+                    KDNController controller;
+                    NS_LOG_INFO("[PoFiAp] Send PacketIn to KDNController with ToS: 0x" << std::hex << uint32_t(tos));
                     tosRegistry[tos] = controller.PacketIn(tos, sender);
                     entry = tosRegistry[tos]; // Asignación dentro del if
-                    NS_LOG_INFO("[PoFiAp] Received FlowMod from PoFiController with " 
+                    NS_LOG_INFO("[PoFiAp] Received FlowMod from KDNController with " 
                         << (entry.priority == 0 ? "HIGH" : 
                            (entry.priority == 1 ? "MEDIUM" : "LOW")) 
                         << " Priority and TxopLimit " 
@@ -208,13 +208,13 @@ class PoFiAp : public Application {
             }
         }
         
-        void EnqueuePacket(PoFiController::Priority priority, const QueueItem& item) {  // Cambiar parámetros
+        void EnqueuePacket(KDNController::Priority priority, const QueueItem& item) {  // Cambiar parámetros
             std::string queueType;
             
-            if (priority == PoFiController::HIGH) {
+            if (priority == KDNController::HIGH) {
                 highPriorityQueue.push(item);
                 queueType = "HIGH";
-            } else if (priority == PoFiController::MEDIUM) {
+            } else if (priority == KDNController::MEDIUM) {
                 mediumPriorityQueue.push(item);
                 queueType = "MEDIUM";
             } else {
@@ -259,7 +259,7 @@ class PoFiAp : public Application {
         }
 
         void ForwardPacket(Ptr<Packet> packet, uint8_t tos, Ipv4Address originalSender, Time arrivalTime) {
-            PoFiController::FlowMod entry = tosRegistry[tos];
+            KDNController::FlowMod entry = tosRegistry[tos];
         
             // 1. Configurar TXOP
             ConfigureEdca(entry.priority, entry.txopLimit);
@@ -292,7 +292,7 @@ class PoFiAp : public Application {
             m_socket->SendTo(packet, 0, InetSocketAddress(originalSender, m_port));
         }
         
-        void ConfigureEdca(PoFiController::Priority priority, uint32_t txopMicroSeconds) {
+        void ConfigureEdca(KDNController::Priority priority, uint32_t txopMicroSeconds) {
     		Time txopLimit = MicroSeconds(txopMicroSeconds);
 
     		Ptr<NetDevice> device = GetNode()->GetDevice(0);
@@ -309,9 +309,9 @@ class PoFiAp : public Application {
 
     		std::string ac;
     		switch (priority) {
-        		case PoFiController::HIGH:   ac = "VO"; break;
-        		case PoFiController::MEDIUM: ac = "VI"; break;
-        		case PoFiController::LOW:    ac = "BE"; break;
+        		case KDNController::HIGH:   ac = "VO"; break;
+        		case KDNController::MEDIUM: ac = "VI"; break;
+        		case KDNController::LOW:    ac = "BE"; break;
         		default:                     ac = "BK"; break;
     		}
 
@@ -365,10 +365,10 @@ class PoFiAp : public Application {
             csvFile << "Priority,PacketsReceived,PacketsSent,BytesReceived,BytesSent,"
                     << "ThroughputKbps,AvgLatencyMs,AvgJitterMs\n";
 
-            std::map<PoFiController::Priority, std::string> labels = {
-                {PoFiController::HIGH, "HIGH"},
-                {PoFiController::MEDIUM, "MEDIUM"},
-                {PoFiController::LOW, "LOW"}
+            std::map<KDNController::Priority, std::string> labels = {
+                {KDNController::HIGH, "HIGH"},
+                {KDNController::MEDIUM, "MEDIUM"},
+                {KDNController::LOW, "LOW"}
             };
 
             for (const auto& [priority, stats] : metricsMap) {
