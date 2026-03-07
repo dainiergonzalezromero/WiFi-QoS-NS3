@@ -10,13 +10,15 @@ It extends NS-3’s WiFi module to model a **Cognitive Access Point (`PoFiAp`)**
 
 ## 🎯 Objectives
 
-- Simulate a **QoS-aware and SDN-controlled WiFi environment**.
-- Analyze differentiated traffic categories (Voice, Video, Best Effort, Background).
-- Evaluate **Throughput**, **Delay**, and **Packet Loss** per access category.
-- **Predict network behavior** using a Random Forest Regressor.
-- **Optimize network parameters** (CWmin/CWmax) automatically using Bayesian Optimization (TPE).
-- Automate **massive parameter exploration** (CWmin/CWmax, number of stations). 
-- Generate detailed CSV summaries and aggregate reports.
+* Simulate a QoS-aware and SDN-controlled WiFi environment with differentiated traffic categories (Voice, Video, Best Effort, Background)
+* Implement a centralized SDN controller (KDNController) that dynamically manages EDCA parameters based on network conditions
+* Create a cognitive Access Point (PoFiAp) with per-priority queuing and real-time metric collection
+* Evaluate Throughput, Delay, and Packet Loss per access category across multiple network densities (10-100 nodes)
+* Predict network behavior using a multi-output Random Forest Regressor (24 simultaneous predictions)
+* Optimize network parameters (CWmin/CWmax) automatically using Bayesian Optimization (TPE) with Optuna
+* Automate massive parameter exploration (1000+ unique configurations, 10 repetitions each)
+* Generate publication-quality graphs with confidence intervals (95%, t-student)
+* Provide a complete baseline comparison between traditional WiFi (NO_SDWN) and SDN-enabled architectures
 
 ---
 
