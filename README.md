@@ -87,12 +87,12 @@ The system features a real-time **UpgradeParameters** mechanism that reacts to n
 EDCA (Enhanced Distributed Channel Access) is the IEEE 802.11e mechanism for **differentiated medium access**.
 The simulation models the four **Access Categories (AC)** as independent queues with different contention parameters:
 
-| Access Category | Typical traffic | Priority | Contention | Typical TXOP |
-|-----------------|-----------------|-----------|-------------|---------------|
-| VO | Voice / VoIP | Very High | Minimal | Long |
-| VI | Video | High | Low | Medium |
-| BE | Browsing / Email | Medium | Medium | Short |
-| BK | File Transfer | Low | High | Very Short |
+| Access Category | Traffic Type | Priority | AIFSN | CWmin | CWmax | TXOP (μs)|
+|-----------------|--------------|----------|-------|-------|-------|----------|
+VO (Voice)  |  VoIP, real-time   |  HIGH  |  2  |  3  |  7  |  1504  |
+VI (Video)  |  Streaming   |  MEDIUM   |  2  |  7  |  15 |  3008  |
+BE (Best Effort)  |  Web, email  |	LOW	|  3	|  15 |	1023  |	0  |
+BK (Background)   |  File transfer  |	NRT   |  3  |	15 |	1023  |	0  |
 
 The `PoFiAp` schedules packets accordingly, while the `KDNController` can dynamically adjust TXOP and contention parameters during runtime, and the `Intelligent Agent` dynamically adjusts parameters to maintain **near-zero packet loss** even in dense networks.
 
