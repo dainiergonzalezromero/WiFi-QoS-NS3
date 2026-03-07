@@ -72,7 +72,7 @@ The system includes a Python-based **AI Agent** (`Inteligen_Agent.py`) that acts
    
    $$Score = 0.35(D_H + L_H) + 0.35(D_M + L_M) + 0.30(D_L + L_L)$$
 
-   
+
    Where each term combines normalized delay and packet loss metrics.
 6. **Validation**: Tests optimal configurations with real simulations (`03_sdwn_ia_comprobacion.py`).
 ---
@@ -279,7 +279,7 @@ This script performs sophisticated statistical processing:
       - Filters outliers (`LostPackets < 0.99*180`)
       - Applies timeout penalty to delay:
 
-   * $$Delay(ms) = (Delay(ms)*ReceivedPackets + (9*1024*7/1000)**LostPackets)/SentPackets$$
+         $$Delay(ms) = (Delay(ms)*ReceivedPackets + (9*1024*7/1000)**LostPackets)/SentPackets$$
    * Calculates: mean, std, min, max for Throughput and Delay
    * Computes weighted mean packet loss percentage
    * Aggregates total lost and sent packets
