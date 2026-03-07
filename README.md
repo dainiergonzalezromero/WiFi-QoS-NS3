@@ -319,7 +319,7 @@ You can access the complete set of results here:
   Appendix |  Supplementary information about defining CA-SDWNs in the NS-3 Simulator |  [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graficas/Apendice.pdf)   |
   Delay_1024_HIGH   |  Delay for 1024-byte packets, HIGH priority.  |  [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graficas/Delay_1024_HIGH.pdf)|
   LostPackets_256_LOW  |  Lost packets for 1024 bytes, HIGH priority.  |  [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graficas/LostPackets_1024_HIGH.pdf)|
-  *... and 10+ more graphs*   |  All combinations of [Delay/LostPackets] × [256/512/1024] × [HIGH/MEDIUM/LOW/NRT]. |    |
+  *... and 10+ more graphs*   |  All combinations of [Delay/LostPackets] × [256/512/1024] × [HIGH/MEDIUM/LOW/NRT]. | [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graficas/)|
 
 
 The graphs are organized by metric, packet size, and traffic priority. For example, you will find files like:
