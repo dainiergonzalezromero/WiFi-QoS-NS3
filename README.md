@@ -308,48 +308,8 @@ $$\text{Delay(ms)} = \frac{(\text{Delay(ms)} \times \text{ReceivedPackets}) + (9
    * 95% confidence intervals (t-student, n=10, t=2.262)
 
 
-#### Example output structure:
-```
-.
-├── NO-SDWN/                    # DATA: BASELINE RESULTS (Standard 802.11e)
-│   ├── 1S/                     # Packet Interval: 1 Second
-│   │   ├── 1024/               # Packet Size: 1024 Bytes
-│   │   │   └── 10...90, 100/   # Network Density: Results by Node Count
-│   │   ├── 256/                # Packet Size: 256 Bytes
-│   │   │   └── 10...90, 100/   # Network Density: Results by Node Count
-│   │   └── 512/                # Packet Size: 512 Bytes
-│   │       └── 10...90, 100/   # Network Density: Results by Node Count
-│   ├── All Data Results.csv    # Full concatenated dataset (Baseline)
-│   ├── Resultados_Finales.csv  # Statistical summary (CSV)
-│   └── Resultados_Finales.xlsx # Statistical summary (Excel)
-│
-├── SDWN-EDCA/                  # DATA: SDN WITH STANDARD EDCA CONFIGURATION
-│   ├── 1S/                     # Packet Interval: 1 Second
-│   │   ├── 1024, 256, 512/     # Packet Size Hierarchy (10 to 100 nodes)
-│   ├── All Data Results.csv    # Full concatenated dataset
-│   ├── Resultados_Finales.csv  # Statistical summary (CSV)
-│   └── Resultados_Finales.xlsx # Statistical summary (Excel)
-│
-├── SDWN-EDCA-15-1023/          # DATA: SDN WITH FIXED CW (15-1023)
-│   ├── 1S/                     # 1-Second Interval Hierarchy
-│   │   ├── 1024, 256, 512/     # Packet Size Hierarchy (10 to 100 nodes)
-│   ├── All Data Results.csv    # Full concatenated dataset
-│   ├── Resultados_Finales.csv  # Statistical summary (CSV)
-│   └── Resultados_Finales.xlsx # Statistical summary (Excel)
-│
-├── SDWN_IA/                    # DATA: INTELLIGENT AGENT TRAINING DATA
-│   ├── 1S/                     # 1-Second Interval Hierarchy (10 to 100 nodes)
-│   └── Results_Finals/         # Consolidated training summaries
-│       ├── All Data Results.csv
-│       ├── Resultados_Finales.csv
-│       └── Resultados_Finales.xlsx
-│
-└── SDWN-IA-EVALUATION/         # DATA: FINAL AI MODEL EVALUATION RESULTS
-    ├── 1S/                     # 1-Second Interval Hierarchy (10 to 100 nodes)
-    ├── All Data Results.csv    # Master evaluation dataset
-    ├── Resultados_Finales.csv  # Statistical summary (CSV)
-    └── Resultados_Finales.xlsx # Statistical summary (Excel)
-```
+## Results:
+[<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graficas/Tablas.pdf)
 
 ---
 
@@ -395,7 +355,6 @@ Related Publications:
 > Bahía Blanca, Buenos Aires, Argentina.
 ---
 
-
 ## 📜 License
 
 MIT License — free to use, modify and distribute with attribution.
@@ -405,7 +364,7 @@ MIT License — free to use, modify and distribute with attribution.
 If you use this code or the SDWN proposals in your research, please cite our paper:
 
 ```bibtex
-@article{gonzalez2025context,
+@article{CA-SDWN2026,
   title={Context-Aware Software-Defined Wireless Networks: An AI-based Approach to Deal with QoS},
   author={González Romero, Dainier and Ochoa, Sergio F. and Santos, Rodrigo},
   journal={Future Internet},
