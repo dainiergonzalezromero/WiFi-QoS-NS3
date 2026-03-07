@@ -101,11 +101,15 @@ The `PoFiAp` schedules packets accordingly, while the `KDNController` can dynami
 ## 📈 Metrics Collected
 
 For each Access Category and simulation setup:
-
-- Average **delay (ms)**
-- Average **throughput (kbps)**
-- **Lost packets** count
-- Aggregated results are exported to CSV for post-processing
+|  Metric	|  Description |	Unit  |
+|-----------|--------------|--------|
+Throughput  |	Data rate successfully delivered |	Kbps |
+Delay |	End-to-end packet latency  |	ms |
+Jitter   |	Delay variation   |	ms |
+Lost Packets   |	Number of packets dropped  |	count |
+Packet Loss Rate  |	Percentage of lost packets |	%  |
+Sent Packets   |	Total packets transmitted  |	count |
+Received Packets  |	Total packets successfully received |	count |
 
 ---
 
