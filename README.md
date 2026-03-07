@@ -4,7 +4,7 @@
 </p>
 This project implements an advanced **simulation and optimization framework** in NS-3 that combines **Software Defined Networking (SDN)**, **IEEE 802.11e WiFi QoS (EDCA)**, and **Machine Learning** to create a **Knowledge-Defined Wireless Network (KDWN)**.
 
-It extends NS-3’s WiFi module to model a **Cognitive Access Point (`PoFiAp`)** interacting with an **SDN Controller (`PoFiController`)**. Furthermore, it integrates an **Intelligent Agent** that uses **Random Forest** and **Bayesian Optimization** to automatically find the optimal network parameters to minimize latency and maximize throughput. Includes a full **Python-based automation and results analysis suite**.
+It extends NS-3’s WiFi module to model a **Cognitive Access Point (`PoFiAp`)** interacting with an **SDN Controller (`KDNController`)**. Furthermore, it integrates an **Intelligent Agent** that uses **Random Forest** and **Bayesian Optimization** to automatically find the optimal network parameters to minimize latency and maximize throughput. Includes a full **Python-based automation and results analysis suite**.
 
 ---
 
@@ -38,9 +38,9 @@ The `PoFiAp` class extends a standard WiFi AP to become **cognitive and SDN-cont
 
 ---
 
-## 🧠 PoFiController (SDN Controller)
+## 🧠 KDNController (SDN Controller)
 
-The `PoFiController` communicates with the PoFiAp through SDN messages (`PacketIn` and `FlowMod`), dictating forwarding decisions and QoS rules.
+The `KDNController` communicates with the PoFiAp through SDN messages (`PacketIn` and `FlowMod`), dictating forwarding decisions and QoS rules.
 
 ### ⚙️ Logic
 1. Receives a `PacketIn` from PoFiAp.  
@@ -71,7 +71,7 @@ The system features a real-time **UpgradeParameters** mechanism that reacts to n
 
 ### ⚙️ Event-Driven Workflow:
 1.  **Event Detection:** The `PoFiAp` detects a station connection/disconnection and updates its internal count of nodes per priority ($N_H, N_M, N_L, N_{NRT}$).
-2.  **Update Request:** The AP sends an `UpdateRequest` message to the `PoFiController`.
+2.  **Update Request:** The AP sends an `UpdateRequest` message to the `KDNController`.
 3.  **Optimization Call:** The Controller forwards the new network state to the **Intelligent Agent**.
 4.  **Re-Calculation:** The Agent uses its pre-trained model to determine the new optimal Contention Window ($CW_{min}, CW_{max}$) values for the current topology.
 5.  **Parameter Deployment:** The Agent returns the values to the Controller, which sends a `ParameterUpdate` message to the AP.
@@ -91,7 +91,7 @@ The simulation models the four **Access Categories (AC)** as independent queues 
 | BE | Browsing / Email | Medium | Medium | Short |
 | BK | File Transfer | Low | High | Very Short |
 
-The `PoFiAp` schedules packets accordingly, while the `PoFiController` can dynamically adjust TXOP and contention parameters during runtime, and the `Intelligent Agent` dynamically adjusts parameters to maintain **near-zero packet loss** even in dense networks.
+The `PoFiAp` schedules packets accordingly, while the `KDNController` can dynamically adjust TXOP and contention parameters during runtime, and the `Intelligent Agent` dynamically adjusts parameters to maintain **near-zero packet loss** even in dense networks.
 
 ---
 
