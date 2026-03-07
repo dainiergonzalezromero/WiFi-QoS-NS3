@@ -363,6 +363,19 @@ Related Publications:
 
 > [1] **González Romero, D.; Ochoa, S.F.; Santos, R.** (2026). *"Context-Aware Software-Defined Wireless Networks: An AI-based Approach to Deal with QoS"*. Future Internet (MDPI).
 
+## 📖 Citation
+If you use this code or the SDWN proposals in your research, please cite our paper:
+
+```bibtex
+@article{CA-SDWN2026,
+  title={Context-Aware Software-Defined Wireless Networks: An AI-based Approach to Deal with QoS},
+  author={González Romero, Dainier and Ochoa, Sergio F. and Santos, Rodrigo},
+  journal={Future Internet},
+  year={2026},
+  publisher={MDPI},
+}
+```
+
 **Author:**
 
 > 🧑‍💻 *Dainier González Romero* <br>
@@ -376,16 +389,3 @@ Related Publications:
 ## 📜 License
 
 MIT License — free to use, modify and distribute with attribution.
-
-
-## 📖 Citation
-If you use this code or the SDWN proposals in your research, please cite our paper:
-
-```bibtex
-@article{CA-SDWN2026,
-  title={Context-Aware Software-Defined Wireless Networks: An AI-based Approach to Deal with QoS},
-  author={González Romero, Dainier and Ochoa, Sergio F. and Santos, Rodrigo},
-  journal={Future Internet},
-  year={2026},
-  publisher={MDPI},
-}
