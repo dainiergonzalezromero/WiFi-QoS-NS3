@@ -112,45 +112,51 @@ The project follows a hierarchical structure to organize simulations, source cod
 
 ```
 scratch/
+├── GRAFICAS FINALES/           # FINAL VISUALIZATION ASSETS
+│   ├── graficar.py             # Script to generate comparative performance plots
+│   └── RESULTADO_FINAL.xlsx    # Consolidated Excel workbook with all results
 │
-│   Core Simulation & Agents
-│   ├── sdwn.cc                 # Main NS-3 simulation (PoFiAp + PoFiController)
-│   ├── no_sdwn.cc              # Baseline simulation (Standard WiFi without SDN)
-│   ├── Inteligen_Agent.py      # AI Engine: Random Forest + Optuna Optimization
-│   └── configuraciones.txt     # Output file for optimized parameters (Agent -> Controller)
+├── IA/                         # ARTIFICIAL INTELLIGENCE PIPELINE
+│   ├── 01_concatenate_results.py    # Data merging from raw simulation outputs
+│   ├── 02_estadisticas.py           # Descriptive statistics and CI calculations
+│   ├── 03_sdwn_ia_comprobacion.py   # In-simulation verification of the AI agent
+│   ├── Inteligen_Agent.py           # Core Reinforcement Learning agent logic
+│   ├── modelo_caracteristicas.py    # Feature engineering and data preprocessing
+│   └── RF Model.py                  # Random Forest model implementation
 │
-│   Automation & Analysis
-│   ├── sdwn_parallel.py        # Parallel (multi-core) simulation runner
-│   ├── sdwn_comprobacion.py    # Simulation integrity validation script
-│   ├── analyze_results.ipynb   # Data cleaning and aggregation tool (Jupyter)
-│   └── res_unificado.py        # Unified dataset for final reporting
+├── Master_Model/               # TRAINED MODELS & PERFORMANCE ANALYTICS
+│   ├── comparacion_Delay_H_mean.png        # Delay comparison: HIGH priority
+│   ├── comparacion_Delay_M_mean.png        # Delay comparison: MEDIUM priority
+│   ├── comparacion_LostPackets_H_mean.png  # Packet loss comparison: HIGH priority
+│   ├── comparacion_LostPackets_M_mean.png  # Packet loss comparison: MEDIUM priority
+│   ├── feature_importance.csv              # KPI ranking from the RF model
+│   └── Modelo Optimizado.joblib            # Final hyperparameter-tuned ML model
 │
-├── Estadisticas/ (Results Hierachy)
-│   │
-│   ├── BE+BK+VI+VO/            # Traffic Scenario
-│   │    └── 1S/Modified/        # Interval / Configuration Type
-│   │        │
-│   │        ├── 10/             # Number of Nodes (e.g., 10 Stations)
-│   │        │   ├── 256/        # Packet Size (e.g., 256 Bytes)
-│   │        │   │   ├── Results_Finals/
-│   │        │   │   ├── Updated/
-│   │        │   │   ├── 01_Todos_Concatenados.csv  # Full training dataset
-│   │        │   │   ├── 02_Resumen_Por_Prioridad.csv
-│   │        │   │   └── SDWN_..._Run1.csv          # Raw simulation metrics
-│   │        │   │
-│   │        │   ├── 512/        # Packet Size: 512 Bytes
-│   │        │   └── 1024/       # Packet Size: 1024 Bytes
-│   │        │
-│   │        ├── 20/ ... 100/    # Incremental Network Density (up to 100 nodes)
-│   │        └── Resumen_Unificado.csv
-│   ├── Logs/
-│   │   └── SDWN_..._Run1.logs     # NS-3 Execution Logs
-│   └── Results_Finals/
-│       └── Results_Finals.csv     # Results Finals
+├── NO_SDWN/                    # BASELINE (Standard 802.11e EDCA)
+│   ├── 01_no_sdwn_paralrell.py      # Parallel execution script for baseline
+│   ├── 02_concatenate_results.py    # Merging of baseline raw CSVs
+│   ├── 02_estadisticas.py           # Statistical processing for baseline
+│   └── no_sdwn.cc                   # C++ Source: Traditional Wi-Fi simulation
 │
-├── Modelo_Estudios_Logs/       # ML Artifacts
-    ├── RF_Model.pkl            # Trained Random Forest Model
-    └── Optuna_Study.pkl        # Bayesian Optimization History
+├── SDWN/                       # PROPOSED SOLUTION (SDN-Enabled)
+│   ├── 01_sdwn_generate_data_ia.py  # Simulation runner for AI training data
+│   ├── 01_sdwn_comprobacion.py      # Functionality tests for SDWN logic
+│   ├── 02_concatenate_results.py    # Merging of SDWN raw CSVs
+│   ├── 02_estadisticas.py           # Statistical processing for SDWN
+│   └── sdwn.cc                      # C++ Source: Centralized SDN Controller
+│
+├── PDF_Graficas/               # PUBLICATION-READY VECTOR GRAPHICS
+│   ├── Apendice.pdf            # Supplemental data and appendix
+│   ├── Delay_XXX_XXX.pdf       # High-res delay plots by packet/priority
+│   ├── LostPackets_XXX_XXX.pdf  # High-res loss plots by packet/priority
+│   └── Tablas.pdf              # Summary tables for documentation
+│
+└── Resultados_Optimizacion_IA/ # OPTIMIZATION OUTPUTS
+│   ├── Optimizacion_CW_Final.csv    # Optimal Contention Window values
+│   └── Optimizacion_CW_Final.xlsx   # Final optimization report in Excel
+├── CITATION.cff                # Metadata for citing this research project
+├── LICENSE                     # Project license (e.g., MIT, GPL)
+└── README.md                   # Main documentation
 ```
 ---
 
