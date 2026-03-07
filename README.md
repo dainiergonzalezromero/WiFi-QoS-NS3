@@ -30,10 +30,10 @@ The `PoFiAp` class extends a standard WiFi AP to become **cognitive and SDN-cont
 ### ✳️ Main functions:
 - **Classification**: inspects the ToS/DSCP field of incoming packets to determine traffic type.
 - **Access Category assignment (EDCA)**:
-   * **VO (Voice)**: highest priority (ToS 0xe0)
-   * **VI (Video)**: medium priority (ToS 0xa0)
-   * **BE (Best Effort)**: low priority (ToS 0x60)
-   * **BK (Background)**: no priority (ToS 0x20)
+   * **VO (Voice)**: highest priority (ToS `0xe0`)
+   * **VI (Video)**: medium priority (ToS `0xa0`)
+   * **BE (Best Effort)**: low priority (ToS `0x60`)
+   * **BK (Background)**: no priority (ToS `0x20`)
 - **Per-AC Queues**  with strict priority scheduling (HIGH > MEDIUM > LOW > NRT).
 - **Dynamic EDCA configuration** adjusts AIFSN, CWmin, CWmax, and TXOP limits per AC.
 - **PacketIn/FlowMod communication** with the SDN controller
