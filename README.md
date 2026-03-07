@@ -279,7 +279,7 @@ This script performs sophisticated statistical processing:
       - Filters outliers (`LostPackets < 0.99*180`)
       - Applies timeout penalty to delay:
 
-         $$Delay(ms) = (Delay(ms)*ReceivedPackets + (9*1024*7/1000)**LostPackets)/SentPackets$$
+         $$\text{Delay(ms)} = \frac{(\text{Delay(ms)} \times \text{ReceivedPackets}) + (9 \times 1024 \times 7 / 1000) \times \text{LostPackets}}{\text{SentPackets}}$$
    * Calculates: mean, std, min, max for Throughput and Delay
    * Computes weighted mean packet loss percentage
    * Aggregates total lost and sent packets
