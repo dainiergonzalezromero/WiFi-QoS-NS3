@@ -277,12 +277,12 @@ This script performs sophisticated statistical processing:
    * Groups by: Packet Size, nStaWifi, nStaH/M/L/NRT, CWminH...CWmaxNRT
    * For each priority (H/M/L/NRT) with stations present:
       - Filters outliers (`LostPackets < 0.99*180`)
-      - Applies timeout penalty to delay:
-
-         $$\text{Delay(ms)} = \frac{(\text{Delay(ms)} \times \text{ReceivedPackets}) + (9 \times 1024 \times 7 / 1000) \times \text{LostPackets}}{\text{SentPackets}}$$
+      - Applies timeout penalty to delay.
    * Calculates: mean, std, min, max for Throughput and Delay
    * Computes weighted mean packet loss percentage
    * Aggregates total lost and sent packets
+
+$$\text{Delay(ms)} = \frac{(\text{Delay(ms)} \times \text{ReceivedPackets}) + (9 \times 1024 \times 7 / 1000) \times \text{LostPackets}}{\text{SentPackets}}$$
 
 - **Output**: Resultados_Finales.csv with 24 target columns ready for machine learning.
 
