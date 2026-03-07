@@ -399,3 +399,16 @@ Related Publications:
 ## 📜 License
 
 MIT License — free to use, modify and distribute with attribution.
+
+
+## 📖 Citation
+If you use this code or the SDWN proposals in your research, please cite our paper:
+
+```bibtex
+@article{gonzalez2025context,
+  title={Context-Aware Software-Defined Wireless Networks: An AI-based Approach to Deal with QoS},
+  author={González Romero, Dainier and Ochoa, Sergio F. and Santos, Rodrigo},
+  journal={Future Internet},
+  year={2026},
+  publisher={MDPI},
+}
