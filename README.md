@@ -315,7 +315,7 @@ You can access the complete set of results here:
 
 |  File  |  Description |  Link  |
 |--------|--------------|--------|
-  Tables   |  Summary tables with all numerical values. |  [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graphics/Tablas.pdf)|
+  Tables   |  Summary tables with all numerical values. |  [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graphics/Tables.pdf)|
   Appendix |  Supplementary information about defining CA-SDWNs in the NS-3 Simulator |  [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graphics/Apendice.pdf)   |
   Delay_1024_HIGH   |  Delay for 1024-byte packets, HIGH priority.  |  [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graphics/Delay_1024_HIGH.pdf)|
   LostPackets_256_LOW  |  Lost packets for 1024 bytes, HIGH priority.  |  [<img src="https://img.shields.io/badge/Download-PDF-red?style=flat-square&logo=adobeacrobatreader">](https://github.com/dainiergonzalezromero/WiFi-QoS-NS3/blob/main/PDF_Graphics/LostPackets_1024_HIGH.pdf)|
