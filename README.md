@@ -154,37 +154,37 @@ scratch/
 │       ├── All Data Results.csv                   # Full concatenated dataset
 │       └── Resultados_Finales.csv                 # Statistical summaries
 │
-├── FINAL_GRAPHS/                                  # VISUALIZATION ASSETS
-│   ├── graficar.py                                # Interactive plotting script
-│   └── RESULTADO_FINAL.xlsx                       # Master Excel with all results
+├── Final_Graphs/                                  # VISUALIZATION ASSETS
+│   ├── Graphics.py                                # Interactive plotting script
+│   └── Final_Results.xlsx                         # Master Excel with all results
 │
 ├── AI/                                            # ARTIFICIAL INTELLIGENCE PIPELINE
-│   ├── 01_concatenate_results.py                  # Merges raw simulation CSVs
-│   ├── 02_estadisticas.py                         # Calculates statistics (mean, std, CI)
-│   ├── 03_sdwn_ia_comprobacion.py                 # Validates optimal configurations
+│   ├── 01_Concatenate_Results.py                  # Merges raw simulation CSVs
+│   ├── 02_Stadistics.py                           # Calculates statistics (mean, std, CI)
+│   ├── 03_SDWN_IA_Comprobation.py                 # Validates optimal configurations
 │   ├── Inteligen_Agent.py                         # Bayesian optimization with Optuna
 │   ├── modelo_caracteristicas.py                  # Feature engineering utilities
 │   └── RF Model.py                                # Random Forest training
 │
 ├── Master_Model/                                  # TRAINED MODELS & ANALYTICS
-│   ├── comparison_Delay_H_mean.png                # Delay comparison: HIGH priority
-│   ├── comparison_Delay_M_mean.png                # Delay comparison: MEDIUM priority
-│   ├── comparison_LostPackets_H_mean.png          # Packet loss: HIGH priority
-│   ├── comparison_LostPackets_M_mean.png          # Packet loss: MEDIUM priority
+│   ├── Comparison_Delay_H_mean.png                # Delay comparison: HIGH priority
+│   ├── Comparison_Delay_M_mean.png                # Delay comparison: MEDIUM priority
+│   ├── Comparison_LostPackets_H_mean.png          # Packet loss: HIGH priority
+│   ├── Comparison_LostPackets_M_mean.png          # Packet loss: MEDIUM priority
 │   ├── feature_importance.csv                     # Feature ranking from RF model
 │   └── Modelo Optimizado.joblib                   # Final trained model
 │
 ├── NO_SDWN/                                       # BASELINE SCRIPTS
-│   ├── 01_no_sdwn_paralrell.py                    # Parallel execution for baseline
-│   ├── 02_concatenate_results.py                  # Merges baseline CSVs
-│   ├── 02_estadisticas.py                         # Statistics for baseline
+│   ├── 01_NO-SDWN_Parallel.py                     # Parallel execution for baseline
+│   ├── 02_Concatenate_Results.py                  # Merges baseline CSVs
+│   ├── 02_Stadistics.py                           # Statistics for baseline
 │   └── no_sdwn.cc                                 # C++ source: traditional WiFi
 │
 ├── SDWN/                                          # SDN-ENABLED SCRIPTS
-│   ├── 01_sdwn_comprobacion.py                    # Validation runs
-│   ├── 01_sdwn_generate_data_ia.py                # AI training data generation
-│   ├── 02_concatenate_results.py                  # Merges SDWN CSVs
-│   ├── 02_estadisticas.py                         # Statistics for SDWN
+│   ├── 01_SDWN_ComprobaTion.py                    # Validation runs
+│   ├── 01_SDWN_Generate_Data_IA.py                # AI training data generation
+│   ├── 02_Concatenate_Results.py                  # Merges SDWN CSVs
+│   ├── 02_Stadistics.py                           # Statistics for SDWN
 │   └── sdwn.cc                                    # C++ source: SDN controller
 │
 ├── PDF_Graphs/                                    # PUBLICATION-READY GRAPHICS
@@ -194,8 +194,8 @@ scratch/
 │   └── ... (36 PDFs total)
 │
 └── AI_Optimization_Results/                       # OPTIMIZATION OUTPUTS
-    ├── Optimizacion_CW_Final.csv                  # Optimal CW values (CSV)
-    └── Optimizacion_CW_Final.xlsx                 # Optimization report (Excel)
+    ├── Optimization_CW_Final.csv                  # Optimal CW values (CSV)
+    └── Optimization_CW_Final.xlsx                 # Optimization report (Excel)
 ```
 ---
 
@@ -218,25 +218,25 @@ Or
 ###  2️⃣ Massive Parallel Execution (Data Generation)
 ```bash
 # Generate AI training data (1000+ unique configurations, 10 repetitions each)
-python3 SDWN/01_sdwn_generate_data_ia.py
+python3 SDWN/01_SDWN_Generate_Data_IA.py
 
 # Run baseline simulations for comparison
-python3 NO_SDWN/01_no_sdwn_paralrell.py
+python3 NO_SDWN/01_NO-SDWN_parallel.py
 
 # Validate specific configurations
-python3 SDWN/01_sdwn_comprobacion.py
+python3 SDWN/01_SDWN_Comprobation.py
 ```
 These scripts use Python's `multiprocessing.Pool` to run simulations in parallel, dramatically reducing total execution time.
 
 ###  3️⃣ Data Consolidation and Analysis
 ```bash
 # Merge all individual CSV files into a single dataset
-python3 AI/01_concatenate_results.py
+python3 AI/01_Concatenate_Results.py
 
 # Calculate statistics per configuration group
-python3 AI/02_estadisticas.py
+python3 AI/02_Stadistics.py
 ```
-The output `Resultados_Finales.csv` contains aggregated metrics ready for AI training.
+The output `Final_Results.csv` contains aggregated metrics ready for AI training.
 
 ###  4️⃣ Train the Master Model
 ```bash
@@ -253,24 +253,24 @@ This generates:
 # Run Bayesian optimization to find optimal CW values
 python3 AI/Inteligen_Agent.py
 ```
-Results saved to `AI_Optimization_Results/Optimizacion_CW_Final.csv`
+Results saved to `AI_Optimization_Results/Optimization_CW_Final.csv`
 
 
 ### 6️⃣ Validate Optimal Configurations
 ```bash
 # Test optimal parameters with real simulations
-python3 AI/03_sdwn_ia_comprobacion.py
+python3 AI/03_SDWN_IA_Comprobacion.py
 ```
 ### 7️⃣ Generate Publication-Quality Graphs
 ```bash
 # Interactive mode or batch export
-python3 FINAL_GRAPHS/graficar.py
+python3 Final_Graphs/Graphics.py
 ```
 Choose option 1 for batch export (36 PDFs) or navigate the interactive menu for custom plots.
 
 ## 📊 Results Analysis and Aggregation
 
-### Script:  `02_estadisticas.py`
+### Script:  `02_Stadistics.py`
 This script performs sophisticated statistical processing:
 - **Input**: All Data Results.csv (consolidated raw data)
 - **Processing per configuration group**:
@@ -293,7 +293,7 @@ $$\text{Delay(ms)} = \frac{(\text{Delay(ms)} \times \text{ReceivedPackets}) + (9
    LostPackets_H_mean, LostPackets_H_sum, ... (repeated for M, L, NRT)
 ```
 
-### Script: `graficar.py` - Visualization Features
+### Script: `Graphics.py` - Visualization Features
 - **Interactive Mode Options**:
 1. **Compare Configurations**: Multiple network types (NO SDWN, SDWN EDCA, SDWN MOD, SDWN IA) for one priority
 2. **Compare Priorities**: All priorities (H/M/L/NRT) for one configuration
