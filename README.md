@@ -1,6 +1,6 @@
 # 🧠 CA-SDWN-WiFi-QoS: AI-Driven Knowledge-Defined Wireless Networks (KDWN) 
 <p align="center">
-  <img src="PDF_Graficas/Captura desde 2026-03-06 18-43-10.png"width="600">
+  <img src="PDF_Graphics/Captura desde 2026-03-06 18-43-10.png"width="600">
 </p>
 
 This project implements an advanced **simulation and optimization framework** in NS-3 that combines **Software Defined Networking (SDN)**, **IEEE 802.11e WiFi QoS (EDCA)**, and **Machine Learning** to create a **Knowledge-Defined Wireless Network (KDWN)**.
