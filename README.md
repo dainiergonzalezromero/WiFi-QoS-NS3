@@ -368,11 +368,16 @@ If you use this code or the SDWN proposals in your research, please cite our pap
 
 ```bibtex
 @article{CA-SDWN2026,
-  title={Context-Aware Software-Defined Wireless Networks: An AI-based Approach to Deal with QoS},
-  author={González Romero, Dainier and Ochoa, Sergio F. and Santos, Rodrigo},
-  journal={Future Internet},
-  year={2026},
-  publisher={MDPI},
+AUTHOR = {González Romero, Dainier and Ochoa, Sergio F. and Santos, Rodrigo M.},
+TITLE = {Context-Aware Software-Defined Wireless Networks: An AI-Based Approach to Deal with QoS},
+JOURNAL = {Future Internet},
+VOLUME = {18},
+YEAR = {2026},
+NUMBER = {3},
+ARTICLE-NUMBER = {162},
+URL = {https://www.mdpi.com/1999-5903/18/3/162},
+ISSN = {1999-5903},
+DOI = {10.3390/fi18030162}
 }
 ```
 
