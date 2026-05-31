@@ -4,6 +4,7 @@
 </p>
 CA-SDWN-WiFi-QoS is an open-source NS-3 simulation framework for Software-Defined Wireless Networks, IEEE 802.11e EDCA QoS, WiFi traffic prioritization, and AI-based contention window optimization using Random Forest and Optuna.
 
+
 This project implements an advanced **simulation and optimization framework** in NS-3 that combines **Software Defined Networking (SDN)**, **IEEE 802.11e WiFi QoS (EDCA)**, and **Machine Learning** to create a **Knowledge-Defined Wireless Network (KDWN)**.
 
 It extends NS-3's WiFi module to model a **Cognitive Access Point (`PoFiAp`)** interacting with an **SDN Controller (`KDNController`)**. Furthermore, it integrates an **Intelligent Agent** that uses **Random Forest** and **Bayesian Optimization** to automatically find optimal network parameters (Contention Windows) to minimize latency and packet loss while maximizing throughput. The project includes a complete **Python-based automation suite for massive simulation execution, data processing, statistical analysis, and professional visualization**.
