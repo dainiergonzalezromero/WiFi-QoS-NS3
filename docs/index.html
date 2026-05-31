@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>CA-SDWN-WiFi-QoS | AI-based WiFi QoS Optimization in NS-3</title>
+
+  <meta name="description" content="CA-SDWN-WiFi-QoS is an AI-based framework for WiFi QoS optimization in NS-3 using Software-Defined Wireless Networks, IEEE 802.11e EDCA, Random Forest models, and Bayesian Optimization." />
+  <meta name="keywords" content="CA-SDWN-WiFi-QoS, NS-3 WiFi QoS, AI WiFi QoS NS-3, IEEE 802.11e EDCA, Software Defined Wireless Networks, SDWN NS-3 QoS, Knowledge Defined Wireless Networks, Bayesian Optimization, Random Forest networking" />
+  <meta name="author" content="Dainier Gonzalez Romero" />
+  <meta name="robots" content="index, follow" />
+
+  <meta property="og:title" content="CA-SDWN-WiFi-QoS | AI-based WiFi QoS Optimization in NS-3" />
+  <meta property="og:description" content="Open-source NS-3 framework for AI-driven WiFi QoS optimization using SDWN, EDCA, Random Forest, and Bayesian Optimization." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://dainiergonzalezromero.github.io/WiFi-QoS-NS3/" />
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0d1b2f;
+      --card: rgba(255, 255, 255, 0.075);
+      --card-border: rgba(255, 255, 255, 0.14);
+      --text: #f5f8ff;
+      --muted: #b7c3d9;
+      --accent: #53d6ff;
+      --accent-2: #8b5cf6;
+      --accent-3: #37f7b5;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(83, 214, 255, 0.24), transparent 30%),
+        radial-gradient(circle at 88% 12%, rgba(139, 92, 246, 0.25), transparent 32%),
+        radial-gradient(circle at 55% 85%, rgba(55, 247, 181, 0.16), transparent 28%),
+        var(--bg);
+      min-height: 100vh;
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1160px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(7, 17, 31, 0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 14px 35px rgba(83, 214, 255, 0.25);
+      font-weight: 900;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 96px 0 56px;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border: 1px solid rgba(83, 214, 255, 0.28);
+      background: rgba(83, 214, 255, 0.08);
+      border-radius: 999px;
+      color: #dff8ff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 22px;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 99px;
+      background: var(--accent-3);
+      box-shadow: 0 0 0 8px rgba(55, 247, 181, 0.12);
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 7vw, 5.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.08em;
+      margin-bottom: 24px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff, #9deeff 45%, #b8a5ff 80%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: clamp(1.06rem, 2vw, 1.24rem);
+      max-width: 690px;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 18px;
+      border-radius: 14px;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      border-color: rgba(83, 214, 255, 0.42);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #06111f;
+      border: none;
+    }
+
+    .visual {
+      position: relative;
+    }
+
+    .orb-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.13), rgba(255,255,255,0.055));
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .orb-card::before {
+      content: "";
+      position: absolute;
+      inset: -80px;
+      background:
+        radial-gradient(circle, rgba(83,214,255,0.22), transparent 35%),
+        conic-gradient(from 90deg, rgba(83,214,255,0.22), rgba(139,92,246,0.12), rgba(55,247,181,0.15), rgba(83,214,255,0.22));
+      filter: blur(22px);
+      opacity: 0.75;
+      animation: rotate 12s linear infinite;
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .network {
+      position: relative;
+      min-height: 410px;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .node {
+      position: absolute;
+      width: 76px;
+      height: 76px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(7, 17, 31, 0.72);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 18px 40px rgba(0,0,0,0.22);
+      font-weight: 900;
+      color: #eafcff;
+      z-index: 2;
+    }
+
+    .node.center {
+      width: 118px;
+      height: 118px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, rgba(83,214,255,0.45), rgba(139,92,246,0.38));
+      font-size: 1.5rem;
+    }
+
+    .n1 { top: 18px; left: 42%; }
+    .n2 { top: 128px; right: 10px; }
+    .n3 { bottom: 46px; right: 80px; }
+    .n4 { bottom: 42px; left: 58px; }
+    .n5 { top: 132px; left: 0; }
+
+    .ring {
+      position: absolute;
+      width: 290px;
+      height: 290px;
+      border-radius: 999px;
+      border: 1px dashed rgba(255,255,255,0.2);
+      z-index: 1;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .stat {
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.4rem;
+      letter-spacing: -0.04em;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    section {
+      padding: 54px 0;
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin-bottom: 26px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.04;
+      letter-spacing: -0.06em;
+      margin-bottom: 12px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 14px 50px rgba(0,0,0,0.18);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.16rem;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+    }
+
+    .icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, rgba(83,214,255,0.2), rgba(139,92,246,0.2));
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 1.35rem;
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .resource {
+      min-height: 188px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .resource small {
+      color: var(--muted);
+      display: block;
+      margin-top: 8px;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .tag {
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.075);
+      border-radius: 999px;
+      color: #d8e6ff;
+      font-size: 0.93rem;
+    }
+
+    .citation {
+      background: rgba(4, 11, 22, 0.7);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--radius);
+      padding: 24px;
+      overflow-x: auto;
+      color: #dff8ff;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      padding: 44px 0 60px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .seo-text {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 72px;
+      }
+
+      .grid, .resource-grid, .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .network {
+        min-height: 340px;
+      }
+
+      .node {
+        transform: scale(0.86);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="page">
+      <nav aria-label="Main navigation">
+        <a class="brand" href="#top" aria-label="CA-SDWN-WiFi-QoS home">
+          <span class="brand-mark">QoS</span>
+          <span>CA-SDWN-WiFi-QoS</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#resources">Resources</a>
+          <a href="#citation">Citation</a>
+          <a href="#keywords">Keywords</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero page">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span> NS-3 · SDWN · AI · WiFi QoS</div>
+
+        <h1><span class="gradient-text">AI-based WiFi QoS Optimization in NS-3</span></h1>
+
+        <p>
+          <strong>CA-SDWN-WiFi-QoS</strong> is an open-source research framework for optimizing Quality of Service in IEEE 802.11 wireless networks using Software-Defined Wireless Networking, Knowledge-Defined Networking, Random Forest prediction models, and Bayesian Optimization.
+        </p>
+
+        <div class="buttons">
+          <a class="btn primary" href="https://github.com/dainiergonzalezromero/WiFi-QoS-NS3" target="_blank" rel="noopener">GitHub Repository</a>
+          <a class="btn" href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener">MDPI Paper</a>
+          <a class="btn" href="https://data.mendeley.com/datasets/ptjvmhb5dc/1" target="_blank" rel="noopener">Mendeley Dataset</a>
+          <a class="btn" href="#citation">BibTeX Citation</a>
+        </div>
+
+        <div class="stats" aria-label="Project highlights">
+          <div class="stat">
+            <strong>NS-3</strong>
+            <span>network simulation</span>
+          </div>
+          <div class="stat">
+            <strong>EDCA</strong>
+            <span>QoS parameter tuning</span>
+          </div>
+          <div class="stat">
+            <strong>AI</strong>
+            <span>prediction & optimization</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual" aria-hidden="true">
+        <div class="orb-card">
+          <div class="network">
+            <div class="ring"></div>
+            <div class="node center">KDWN</div>
+            <div class="node n1">VO</div>
+            <div class="node n2">VI</div>
+            <div class="node n3">BE</div>
+            <div class="node n4">BK</div>
+            <div class="node n5">AP</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="page">
+      <div class="section-title">
+        <h2>Research-grade simulation framework for intelligent wireless QoS.</h2>
+        <p>
+          Designed for technical and academic experimentation with AI-assisted QoS management in Software-Defined Wireless Networks.
+        </p>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="icon">📡</div>
+          <h3>IEEE 802.11e EDCA QoS</h3>
+          <p>
+            Models differentiated WiFi traffic classes including voice, video, best effort, and background traffic to evaluate QoS-aware network behavior.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="icon">🧠</div>
+          <h3>AI-driven optimization</h3>
+          <p>
+            Uses Random Forest prediction models and Bayesian Optimization with Optuna to tune EDCA parameters for improved network performance.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="icon">🕸️</div>
+          <h3>SDWN/KDWN architecture</h3>
+          <p>
+            Integrates Software-Defined Wireless Networking concepts with knowledge-driven control for adaptive QoS management.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="icon">⚙️</div>
+          <h3>Automated experiments</h3>
+          <p>
+            Supports large-scale simulation campaigns, dataset generation, statistical aggregation, and reproducible experimentation workflows.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="icon">📊</div>
+          <h3>Analysis & visualization</h3>
+          <p>
+            Includes tools for processing simulation outputs, validating models, comparing scenarios, and generating publication-ready graphs.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="icon">🔬</div>
+          <h3>Academic reproducibility</h3>
+          <p>
+            Connects source code, research paper, dataset, and citation metadata to support transparent research reuse and validation.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="resources" class="page">
+      <div class="section-title">
+        <h2>Resources</h2>
+        <p>
+          Access the implementation, scientific publication, dataset, and citation details for academic use.
+        </p>
+      </div>
+
+      <div class="resource-grid">
+        <a class="card resource" href="https://github.com/dainiergonzalezromero/WiFi-QoS-NS3" target="_blank" rel="noopener">
+          <div>
+            <div class="icon">💻</div>
+            <h3>GitHub Repository</h3>
+            <small>Source code, scripts, models, and simulation framework.</small>
+          </div>
+          <strong>Open repo →</strong>
+        </a>
+
+        <a class="card resource" href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener">
+          <div>
+            <div class="icon">📄</div>
+            <h3>MDPI Paper</h3>
+            <small>Architecture, methodology, experiments, and research discussion.</small>
+          </div>
+          <strong>Read paper →</strong>
+        </a>
+
+        <a class="card resource" href="https://data.mendeley.com/datasets/ptjvmhb5dc/1" target="_blank" rel="noopener">
+          <div>
+            <div class="icon">🗂️</div>
+            <h3>Mendeley Dataset</h3>
+            <small>Experimental data, simulation results, and supplementary material.</small>
+          </div>
+          <strong>View dataset →</strong>
+        </a>
+
+        <a class="card resource" href="#citation">
+          <div>
+            <div class="icon">🎓</div>
+            <h3>BibTeX Citation</h3>
+            <small>Citation entry for academic reuse and software referencing.</small>
+          </div>
+          <strong>Copy citation →</strong>
+        </a>
+      </div>
+    </section>
+
+    <section id="citation" class="page">
+      <div class="section-title">
+        <h2>Citation</h2>
+        <p>
+          If you use this software, dataset, or methodology in your research, please cite the associated publication and repository.
+        </p>
+      </div>
+
+      <pre class="citation"><code>@software{gonzalez_romero_ca_sdwn_wifi_qos,
+  author  = {Gonzalez Romero, Dainier},
+  title   = {CA-SDWN-WiFi-QoS: AI-based WiFi QoS Optimization in NS-3},
+  url     = {https://github.com/dainiergonzalezromero/WiFi-QoS-NS3},
+  version = {1.0.0},
+  year    = {2025}
+}</code></pre>
+    </section>
+
+    <section id="keywords" class="page">
+      <div class="section-title">
+        <h2>Technical keywords</h2>
+        <p>
+          This project focuses on niche academic and technical search topics where the repository, paper, and dataset can reinforce each other.
+        </p>
+      </div>
+
+      <div class="tag-cloud" aria-label="Project keywords">
+        <span class="tag">CA-SDWN-WiFi-QoS</span>
+        <span class="tag">NS-3 WiFi QoS EDCA SDN</span>
+        <span class="tag">AI WiFi QoS NS-3</span>
+        <span class="tag">Software Defined Wireless Networks NS-3 QoS</span>
+        <span class="tag">Knowledge Defined Wireless Networks</span>
+        <span class="tag">IEEE 802.11e EDCA Optimization</span>
+        <span class="tag">Random Forest networking</span>
+        <span class="tag">Bayesian Optimization WiFi QoS</span>
+      </div>
+    </section>
+
+    <div class="seo-text">
+      <p>CA-SDWN-WiFi-QoS is an AI-based WiFi QoS optimization framework for NS-3.</p>
+      <p>Software Defined Wireless Networks and IEEE 802.11e EDCA QoS optimization using Machine Learning and Bayesian Optimization.</p>
+      <p>NS-3 WiFi QoS EDCA SDN simulation framework for academic research in wireless networks.</p>
+      <p>AI WiFi QoS NS-3 framework with Random Forest prediction models and Optuna Bayesian Optimization.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="page footer-inner">
+      <p>© 2025 Dainier Gonzalez Romero. Released as open-source research software.</p>
+      <p>CA-SDWN-WiFi-QoS · NS-3 · SDWN · AI for Networking</p>
+    </div>
+  </footer>
+</body>
+</html>
