@@ -1,6 +1,6 @@
 # 🧠 CA-SDWN-WiFi-QoS: AI-Driven Knowledge-Defined Wireless Networks (KDWN) 
 <p align="center">
-  <img src="PDF_Graphics/Captura desde 2026-03-06 18-43-10.png"width="600">
+  <img src="docs/Final.png"width="600">
 </p>
 CA-SDWN-WiFi-QoS is an open-source NS-3 simulation framework for Software-Defined Wireless Networks, IEEE 802.11e EDCA QoS, WiFi traffic prioritization, and AI-based contention window optimization using Random Forest and Optuna.
 
