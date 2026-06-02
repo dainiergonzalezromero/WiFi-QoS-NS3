@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dainiergonzalezromero.github.io/WiFi-QoS-NS3/sitemap.xml
