@@ -1,22 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>NS-3 WiFi QoS Simulator with IEEE 802.11e EDCA and AI Optimization</title>
+  <title>Context-Aware Software-Defined Wireless Networks: An AI-Based Approach to Deal with QoS</title>
 
   <meta name="description" content="CA-SDWN-WiFi-QoS is an AI-based framework for WiFi QoS optimization in NS-3 using Software-Defined Wireless Networks, IEEE 802.11e EDCA, Random Forest models, and Bayesian Optimization." />
   <meta name="keywords" content="CA-SDWN-WiFi-QoS, NS-3 WiFi QoS, AI WiFi QoS NS-3, IEEE 802.11e EDCA, Software Defined Wireless Networks, SDWN NS-3 QoS, Knowledge Defined Wireless Networks, Bayesian Optimization, Random Forest networking" />
   <meta name="author" content="Dainier Gonzalez Romero" />
   <meta name="robots" content="index, follow" />
 
-  <meta property="og:title" content="NS-3 WiFi QoS Simulator with IEEE 802.11e EDCA and AI Optimization" />
+  <meta property="og:title" content="Context-Aware Software-Defined Wireless Networks: An AI-Based Approach to Deal with QoS" />
   <meta property="og:description" content="Open-source NS-3 framework for AI-driven WiFi QoS optimization using SDWN, EDCA, Random Forest, and Bayesian Optimization." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://dainiergonzalezromero.github.io/WiFi-QoS-NS3/" />
   <link rel="canonical" href="https://dainiergonzalezromero.github.io/WiFi-QoS-NS3/" />
+  
+  <meta name="google-site-verification" content="dstIu3s-8UFde_y1LSu0nnfXApPzEWDLtc8DrYnBWJE" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1e1b4b',   /* Azul Oscuro Institucional */
+            secondary: '#6366f1', /* Violeta */
+            accent: '#06b6d4',    /* Cian */
+            lightBg: '#f9fafb'    /* Gris claro para alternancia */
+          },
+          fontFamily: {
+            'sans': ['Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
   <script type="application/ld+json">
     {
       "@context":"https://schema.org",
@@ -34,657 +59,456 @@
     }
   </script>
 
-  <meta name="google-site-verification" content="dstIu3s-8UFde_y1LSu0nnfXApPzEWDLtc8DrYnBWJE" />
   <style>
-    :root {
-      --bg: #07111f;
-      --bg-soft: #0d1b2f;
-      --card: rgba(255, 255, 255, 0.075);
-      --card-border: rgba(255, 255, 255, 0.14);
-      --text: #f5f8ff;
-      --muted: #b7c3d9;
-      --accent: #53d6ff;
-      --accent-2: #8b5cf6;
-      --accent-3: #37f7b5;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-      --radius: 24px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 12% 10%, rgba(83, 214, 255, 0.24), transparent 30%),
-        radial-gradient(circle at 88% 12%, rgba(139, 92, 246, 0.25), transparent 32%),
-        radial-gradient(circle at 55% 85%, rgba(55, 247, 181, 0.16), transparent 28%),
-        var(--bg);
-      min-height: 100vh;
-      line-height: 1.65;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .page {
-      width: min(1160px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(18px);
-      background: rgba(7, 17, 31, 0.72);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 0;
-    }
-
-    .brand {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-
-    .brand-mark {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 14px 35px rgba(83, 214, 255, 0.25);
-      font-weight: 900;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-    }
-
-    .hero {
-      padding: 96px 0 56px;
-      display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      gap: 48px;
-      align-items: center;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 14px;
-      border: 1px solid rgba(83, 214, 255, 0.28);
-      background: rgba(83, 214, 255, 0.08);
-      border-radius: 999px;
-      color: #dff8ff;
-      font-weight: 700;
-      font-size: 0.9rem;
-      margin-bottom: 22px;
-    }
-
-    .pulse {
-      width: 9px;
-      height: 9px;
-      border-radius: 99px;
-      background: var(--accent-3);
-      box-shadow: 0 0 0 8px rgba(55, 247, 181, 0.12);
-    }
-
-    h1 {
-      font-size: clamp(2.7rem, 7vw, 5.8rem);
-      line-height: 0.95;
-      letter-spacing: -0.08em;
-      margin-bottom: 24px;
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, #ffffff, #9deeff 45%, #b8a5ff 80%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero p {
-      color: var(--muted);
-      font-size: clamp(1.06rem, 2vw, 1.24rem);
-      max-width: 690px;
-      margin-bottom: 30px;
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 30px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 13px 18px;
-      border-radius: 14px;
-      font-weight: 800;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      border-color: rgba(83, 214, 255, 0.42);
-      background: rgba(255,255,255,0.12);
-    }
-
-    .btn.primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #06111f;
-      border: none;
-    }
-
-    .visual {
-      position: relative;
-    }
-
-    .orb-card {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--card-border);
-      background: linear-gradient(180deg, rgba(255,255,255,0.13), rgba(255,255,255,0.055));
-      border-radius: var(--radius);
-      padding: 28px;
-      box-shadow: var(--shadow);
-    }
-
-    .orb-card::before {
-      content: "";
+    /* Sistema premium de Carrusel Animado por Fundido Cruzado (Cross-fade) */
+    .hero-carousel {
       position: absolute;
-      inset: -80px;
-      background:
-        radial-gradient(circle, rgba(83,214,255,0.22), transparent 35%),
-        conic-gradient(from 90deg, rgba(83,214,255,0.22), rgba(139,92,246,0.12), rgba(55,247,181,0.15), rgba(83,214,255,0.22));
-      filter: blur(22px);
-      opacity: 0.75;
-      animation: rotate 12s linear infinite;
-    }
-
-    @keyframes rotate {
-      to { transform: rotate(360deg); }
-    }
-
-    .network {
-      position: relative;
-      min-height: 410px;
-      display: grid;
-      place-items: center;
-      isolation: isolate;
-    }
-
-    .node {
-      position: absolute;
-      width: 76px;
-      height: 76px;
-      border-radius: 22px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(7, 17, 31, 0.72);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 18px 40px rgba(0,0,0,0.22);
-      font-weight: 900;
-      color: #eafcff;
-      z-index: 2;
-    }
-
-    .node.center {
-      width: 118px;
-      height: 118px;
-      border-radius: 34px;
-      background: linear-gradient(135deg, rgba(83,214,255,0.45), rgba(139,92,246,0.38));
-      font-size: 1.5rem;
-    }
-
-    .n1 { top: 18px; left: 42%; }
-    .n2 { top: 128px; right: 10px; }
-    .n3 { bottom: 46px; right: 80px; }
-    .n4 { bottom: 42px; left: 58px; }
-    .n5 { top: 132px; left: 0; }
-
-    .ring {
-      position: absolute;
-      width: 290px;
-      height: 290px;
-      border-radius: 999px;
-      border: 1px dashed rgba(255,255,255,0.2);
-      z-index: 1;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 34px;
-    }
-
-    .stat {
-      border: 1px solid var(--card-border);
-      background: var(--card);
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.4rem;
-      letter-spacing: -0.04em;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    section {
-      padding: 54px 0;
-    }
-
-    .section-title {
-      max-width: 760px;
-      margin-bottom: 26px;
-    }
-
-    .section-title h2 {
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      line-height: 1.04;
-      letter-spacing: -0.06em;
-      margin-bottom: 12px;
-    }
-
-    .section-title p {
-      color: var(--muted);
-      font-size: 1.06rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .card {
-      border: 1px solid var(--card-border);
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 24px;
-      box-shadow: 0 14px 50px rgba(0,0,0,0.18);
-    }
-
-    .card h3 {
-      margin-bottom: 10px;
-      font-size: 1.16rem;
-    }
-
-    .card p, .card li {
-      color: var(--muted);
-    }
-
-    .icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, rgba(83,214,255,0.2), rgba(139,92,246,0.2));
-      border: 1px solid rgba(255,255,255,0.14);
-      font-size: 1.35rem;
-    }
-
-    .resource-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-
-    .resource {
-      min-height: 188px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .resource small {
-      color: var(--muted);
-      display: block;
-      margin-top: 8px;
-    }
-
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .tag {
-      padding: 8px 12px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.075);
-      border-radius: 999px;
-      color: #d8e6ff;
-      font-size: 0.93rem;
-    }
-
-    .citation {
-      background: rgba(4, 11, 22, 0.7);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: var(--radius);
-      padding: 24px;
-      overflow-x: auto;
-      color: #dff8ff;
-      font-size: 0.92rem;
-    }
-
-    footer {
-      padding: 44px 0 60px;
-      color: var(--muted);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      margin-top: 40px;
-    }
-
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .seo-text {
-      position: absolute;
-      left: -9999px;
-      width: 1px;
-      height: 1px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -20;
       overflow: hidden;
     }
+    .carousel-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      animation: crossfade 24s infinite ease-in-out;
+    }
+    
+    /* Configuración de las 3 imágenes de fondo del carrusel */
+    .carousel-slide:nth-child(1) {
+      background-image: url('imgs/bg1.jpeg');
+      animation-delay: 0s;
+    }
+    .carousel-slide:nth-child(2) {
+      background-image: url('imgs/bg2.jpeg');
+      animation-delay: 6s;
+    }
+    .carousel-slide:nth-child(3) {
+      background-image: url('imgs/bg3.jpeg');
+      animation-delay: 12s;
+    }
+    .carousel-slide:nth-child(4) {
+      background-image: url('imgs/bg4.jpeg');
+      animation-delay: 18s;
+    }
 
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding-top: 72px;
-      }
+    @keyframes crossfade {
+      0% { opacity: 0; transform: scale(1); }
+      5% { opacity: 1; }      /* Aparece */
+      25% { opacity: 1; }     /* Se mantiene visible */
+      30% { opacity: 0; transform: scale(1.04); } /* Desaparece con zoom sutil */
+      100% { opacity: 0; }
+    }
 
-      .grid, .resource-grid, .stats {
-        grid-template-columns: 1fr;
-      }
+    /* Efecto premium extra de gradiente oscuro para el Hero*/
+    .hero-overlay {
+      background: linear-gradient(to bottom, rgba(20, 25, 70, 0.55), rgba(15, 15, 40, 0.65));
+    }
 
-      .nav-links {
-        display: none;
-      }
-
-      .network {
-        min-height: 340px;
-      }
-
-      .node {
-        transform: scale(0.86);
-      }
+    /* Animación de entrada premium al cargar la página */
+    .animate-fade-in-up {
+      animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 
-<body>
-  <header>
-    <div class="page">
-      <nav aria-label="Main navigation">
-        <a class="brand" href="#top" aria-label="CA-SDWN-WiFi-QoS home">
-          <span class="brand-mark">QoS</span>
-          <span>CA-SDWN-WiFi-QoS</span>
+<body class="font-sans text-gray-800 bg-white antialiased selection:bg-secondary/20 selection:text-primary">
+
+  <nav class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 shadow-sm border-b border-gray-100 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="#top" class="flex items-center gap-3 font-black tracking-tight text-primary group" aria-label="CA-SDWN-WiFi-QoS home">
+          <div class="w-10 h-10 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-md shadow-secondary/20 transform transition-transform group-hover:scale-105">
+            <i class="fas fa-network-wired text-white text-sm"></i>
+          </div>
+          <div class="leading-tight">
+            <h1 class="text-lg font-extrabold text-primary">CA-SDWN-WiFi-QoS</h1>
+            <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">AI Framework for NS-3</p>
+          </div>
         </a>
 
-        <div class="nav-links">
-          <a href="#features">Features</a>
-          <a href="#resources">Resources</a>
-          <a href="#citation">Citation</a>
-          <a href="#keywords">Keywords</a>
+        <div class="hidden md:flex items-center space-x-6 text-sm font-semibold text-gray-600">
+          <a href="#top" class="hover:text-secondary transition-colors">Home</a>
+          <a href="#features" class="hover:text-secondary transition-colors">Features</a>
+          <a href="#resources" class="hover:text-secondary transition-colors">Resources</a>
+          <a href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener" class="hover:text-secondary transition-colors">Paper</a>
+          <a href="#citation" class="hover:text-secondary transition-colors">Citation</a>
+          <a href="https://github.com/dainiergonzalezromero/WiFi-QoS-NS3" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-xl hover:bg-primary transition-all transform hover:scale-105 shadow-sm shadow-secondary/30">
+            <i class="fab fa-github"></i> GitHub
+          </a>
         </div>
-      </nav>
+
+        <button class="md:hidden p-2 text-gray-600 hover:text-primary focus:outline-none" onclick="toggleMobileMenu()" aria-label="Toggle Menu">
+          <i id="menu-icon" class="fas fa-bars text-xl transition-transform duration-300"></i>
+        </button>
+      </div>
     </div>
-  </header>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100 shadow-inner">
+      <div class="px-4 pt-2 pb-6 space-y-2 font-semibold text-gray-600">
+        <a href="#top" onclick="toggleMobileMenu()" class="block py-2 hover:text-secondary">Home</a>
+        <a href="#features" onclick="toggleMobileMenu()" class="block py-2 hover:text-secondary">Features</a>
+        <a href="#resources" onclick="toggleMobileMenu()" class="block py-2 hover:text-secondary">Resources</a>
+        <a href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener" class="block py-2 hover:text-secondary">Paper</a>
+        <a href="#citation" onclick="toggleMobileMenu()" class="block py-2 hover:text-secondary">Citation</a>
+        <a href="https://github.com/dainiergonzalezromero/WiFi-QoS-NS3" target="_blank" rel="noopener" class="block text-center bg-secondary text-white px-4 py-2.5 rounded-xl mt-4">
+          <i class="fab fa-github mr-2"></i>GitHub
+        </a>
+      </div>
+    </div>
+  </nav>
 
   <main id="top">
-    <section class="hero page">
-      <div>
-        <div class="eyebrow"><span class="pulse"></span> NS-3 · SDWN · AI · WiFi QoS</div>
 
-        <h1><span class="gradient-text">NS-3 WiFi QoS Simulator with IEEE 802.11e EDCA and AI Optimization</span></h1>
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      
+      <div class="hero-carousel">
+        <div class="carousel-slide"></div>
+        <div class="carousel-slide"></div>
+        <div class="carousel-slide"></div>
+        <div class="carousel-slide"></div>
+        <div class="absolute inset-0 hero-overlay"></div>
+      </div>
 
-        <p>
-          <strong>CA-SDWN-WiFi-QoS</strong> is an open-source research framework for optimizing Quality of Service in IEEE 802.11 wireless networks using Software-Defined Wireless Networking, Knowledge-Defined Networking, Random Forest prediction models, and Bayesian Optimization.
-        </p>
-
-        <div class="buttons">
-          <a class="btn primary" href="https://github.com/dainiergonzalezromero/WiFi-QoS-NS3" target="_blank" rel="noopener">GitHub Repository</a>
-          <a class="btn" href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener">MDPI Paper</a>
-          <a class="btn" href="https://data.mendeley.com/datasets/ptjvmhb5dc/1" target="_blank" rel="noopener">Mendeley Dataset</a>
-          <a class="btn" href="#citation">BibTeX Citation</a>
+      <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white space-y-8 py-12 opacity-0 animate-fade-in-up">
+        
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-full text-accent text-xs font-bold tracking-wider uppercase mx-auto">
+          <span class="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+          AI-Powered Wireless Network Optimization
         </div>
 
-        <div class="stats" aria-label="Project highlights">
-          <div class="stat">
-            <strong>NS-3</strong>
-            <span>network simulation</span>
-          </div>
-          <div class="stat">
-            <strong>EDCA</strong>
-            <span>QoS parameter tuning</span>
-          </div>
-          <div class="stat">
-            <strong>AI</strong>
-            <span>prediction & optimization</span>
-          </div>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight max-w-5xl mx-auto">
+          Context-Aware Software-Defined Wireless Networks: <br>
+          <span class="bg-gradient-to-r from-white via-cyan-200 to-indigo-200 bg-clip-text text-transparent font-extrabold text-2xl sm:text-4xl lg:text-5xl block mt-4">
+            An AI-Based Approach to Deal with QoS
+          </span>
+        </h1>
+
+        <p class="text-gray-300 text-base sm:text-lg max-w-3xl mx-auto font-light leading-relaxed">
+          An open-source research framework for intelligent QoS optimization in IEEE 802.11 wireless networks using NS-3, Software-Defined Wireless Networking, Random Forest prediction and Bayesian Optimization.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
+          <a href="https://github.com/dainiergonzalezromero/WiFi-QoS-NS3" target="_blank" rel="noopener" class="w-full sm:w-auto bg-gradient-to-r from-secondary to-purple-600 text-white font-bold px-8 py-4 rounded-xl transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-secondary/30 flex items-center justify-center gap-2 text-base">
+            <i class="fab fa-github text-lg"></i> GitHub Repository
+          </a>
+          <a href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener" class="w-full sm:w-auto bg-white text-primary font-bold px-8 py-4 rounded-xl transition-all transform hover:scale-105 hover:bg-gray-100 flex items-center justify-center gap-2 text-base shadow-md">
+            <i class="fas fa-file-alt"></i> Read MDPI Paper
+          </a>
+          <a href="https://data.mendeley.com/datasets/ptjvmhb5dc/1" target="_blank" rel="noopener" class="w-full sm:w-auto bg-white/10 border border-white/20 text-white font-semibold px-6 py-4 rounded-xl transition-all transform hover:scale-105 hover:bg-white/20 flex items-center justify-center gap-2 text-base backdrop-blur-sm">
+            <i class="fas fa-database"></i> Dataset
+          </a>
+        </div>
+
+        <div class="flex flex-wrap gap-x-8 gap-y-2 pt-6 justify-center border-t border-white/10 text-gray-400 text-xs sm:text-sm font-medium tracking-wide">
+          <div class="flex items-center gap-2"><i class="fas fa-star text-accent"></i> Open Source</div>
+          <div class="flex items-center gap-2"><i class="fas fa-certificate text-secondary"></i> Published Research</div>
+          <div class="flex items-center gap-2"><i class="fas fa-brain text-emerald-400"></i> AI Optimization</div>
         </div>
       </div>
 
-      <div class="visual" aria-hidden="true">
-        <div class="orb-card">
-          <div class="network">
-            <div class="ring"></div>
-            <div class="node center">KDWN</div>
-            <div class="node n1">VO</div>
-            <div class="node n2">VI</div>
-            <div class="node n3">BE</div>
-            <div class="node n4">BK</div>
-            <div class="node n5">AP</div>
-          </div>
+      <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce hidden sm:block">
+        <i class="fas fa-chevron-down text-white/40 text-xl"></i>
+      </div>
+    </section>
+
+    <section id="features" class="py-24 bg-white relative z-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-20 space-y-4">
+          <h2 class="text-3xl sm:text-5xl font-black text-primary tracking-tight">
+            Research-grade simulation framework for intelligent wireless QoS.
+          </h2>
+          <div class="w-16 h-1 bg-secondary mx-auto rounded-full"></div>
+          <p class="text-gray-500 text-base sm:text-lg pt-2">
+            Designed for technical and academic experimentation with AI-assisted QoS management in Software-Defined Wireless Networks.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          <article class="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:border-secondary/20 flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 bg-secondary/5 border border-secondary/10 text-secondary text-2xl rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-secondary group-hover:text-white shadow-inner">
+                <i class="fas fa-wifi"></i>
+              </div>
+              <h3 class="text-primary text-xl font-bold mb-3">IEEE 802.11e EDCA QoS</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                Models differentiated WiFi traffic classes including voice, video, best effort, and background traffic to evaluate QoS-aware network behavior.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-gray-50 mt-6 flex items-center text-secondary text-xs font-bold tracking-wider uppercase group-hover:text-primary transition-colors">
+              Learn more <i class="fas fa-arrow-right ml-2 transform transition-transform group-hover:translate-x-1"></i>
+            </div>
+          </article>
+
+          <article class="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:border-accent/20 flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 bg-accent/5 border border-accent/10 text-accent text-2xl rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-accent group-hover:text-white shadow-inner">
+                <i class="fas fa-brain"></i>
+              </div>
+              <h3 class="text-primary text-xl font-bold mb-3">AI-driven Optimization</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                Uses Random Forest prediction models and Bayesian Optimization with Optuna to tune EDCA parameters for improved network performance.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-gray-50 mt-6 flex items-center text-accent text-xs font-bold tracking-wider uppercase group-hover:text-primary transition-colors">
+              Learn more <i class="fas fa-arrow-right ml-2 transform transition-transform group-hover:translate-x-1"></i>
+            </div>
+          </article>
+
+          <article class="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:border-secondary/20 flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 bg-secondary/5 border border-secondary/10 text-secondary text-2xl rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-secondary group-hover:text-white shadow-inner">
+                <i class="fas fa-network-wired"></i>
+              </div>
+              <h3 class="text-primary text-xl font-bold mb-3">SDWN/KDWN Architecture</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                Integrates Software-Defined Wireless Networking concepts with knowledge-driven control for adaptive QoS management.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-gray-50 mt-6 flex items-center text-secondary text-xs font-bold tracking-wider uppercase group-hover:text-primary transition-colors">
+              Learn more <i class="fas fa-arrow-right ml-2 transform transition-transform group-hover:translate-x-1"></i>
+            </div>
+          </article>
+
+          <article class="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:border-accent/20 flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 bg-accent/5 border border-accent/10 text-accent text-2xl rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-accent group-hover:text-white shadow-inner">
+                <i class="fas fa-microchip"></i>
+              </div>
+              <h3 class="text-primary text-xl font-bold mb-3">Automated Experiments</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                Supports large-scale simulation campaigns, dataset generation, statistical aggregation, and reproducible experimentation workflows.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-gray-50 mt-6 flex items-center text-accent text-xs font-bold tracking-wider uppercase group-hover:text-primary transition-colors">
+              Learn more <i class="fas fa-arrow-right ml-2 transform transition-transform group-hover:translate-x-1"></i>
+            </div>
+          </article>
+
+          <article class="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:border-secondary/20 flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 bg-secondary/5 border border-secondary/10 text-secondary text-2xl rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-secondary group-hover:text-white shadow-inner">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3 class="text-primary text-xl font-bold mb-3">Analysis & Visualization</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                Includes tools for processing simulation outputs, validating models, comparing scenarios, and generating publication-ready graphs.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-gray-50 mt-6 flex items-center text-secondary text-xs font-bold tracking-wider uppercase group-hover:text-primary transition-colors">
+              Learn more <i class="fas fa-arrow-right ml-2 transform transition-transform group-hover:translate-x-1"></i>
+            </div>
+          </article>
+
+          <article class="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:border-accent/20 flex flex-col justify-between group">
+            <div>
+              <div class="w-14 h-14 bg-accent/5 border border-accent/10 text-accent text-2xl rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:bg-accent group-hover:text-white shadow-inner">
+                <i class="fas fa-database"></i>
+              </div>
+              <h3 class="text-primary text-xl font-bold mb-3">Academic Reproducibility</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">
+                Connects source code, research paper, dataset, and citation metadata to support transparent research reuse and validation.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-gray-50 mt-6 flex items-center text-accent text-xs font-bold tracking-wider uppercase group-hover:text-primary transition-colors">
+              Learn more <i class="fas fa-arrow-right ml-2 transform transition-transform group-hover:translate-x-1"></i>
+            </div>
+          </article>
+
         </div>
       </div>
     </section>
 
-    <section id="features" class="page">
-      <div class="section-title">
-        <h2>Research-grade simulation framework for intelligent wireless QoS.</h2>
-        <p>
-          Designed for technical and academic experimentation with AI-assisted QoS management in Software-Defined Wireless Networks.
-        </p>
-      </div>
-
-      <div class="grid">
-        <article class="card">
-          <div class="icon">📡</div>
-          <h3>IEEE 802.11e EDCA QoS</h3>
-          <p>
-            Models differentiated WiFi traffic classes including voice, video, best effort, and background traffic to evaluate QoS-aware network behavior.
+    <section id="resources" class="py-24 bg-lightBg border-y border-gray-100 relative z-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mb-16 space-y-4">
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight">Resources</h2>
+          <p class="text-gray-500 text-base">
+            Access the official implementation, peer-reviewed scientific publication, open data, and proper citation entries for academic reuse.
           </p>
-        </article>
+        </div>
 
-        <article class="card">
-          <div class="icon">🧠</div>
-          <h3>AI-driven optimization</h3>
-          <p>
-            Uses Random Forest prediction models and Bayesian Optimization with Optuna to tune EDCA parameters for improved network performance.
-          </p>
-        </article>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <a href="https://github.com/dainiergonzalezromero/WiFi-QoS-NS3" target="_blank" rel="noopener" class="bg-white border border-gray-200/60 rounded-2xl p-6 flex flex-col justify-between shadow-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md hover:border-secondary/40 group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-secondary/5 border border-secondary/10 flex items-center justify-center text-secondary text-xl mb-5 transition-all group-hover:bg-secondary group-hover:text-white">
+                <i class="fab fa-github"></i>
+              </div>
+              <h3 class="text-primary font-bold text-lg mb-2">GitHub Repository</h3>
+              <p class="text-gray-400 text-xs leading-relaxed mb-6">Source code, automation scripts, core models, and full simulation setup.</p>
+            </div>
+            <strong class="text-secondary text-sm font-semibold flex items-center gap-1 group-hover:text-primary transition-colors">Open repository <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></strong>
+          </a>
 
-        <article class="card">
-          <div class="icon">🕸️</div>
-          <h3>SDWN/KDWN architecture</h3>
-          <p>
-            Integrates Software-Defined Wireless Networking concepts with knowledge-driven control for adaptive QoS management.
-          </p>
-        </article>
+          <a href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener" class="bg-white border border-gray-200/60 rounded-2xl p-6 flex flex-col justify-between shadow-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md hover:border-accent/40 group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-accent/5 border border-accent/10 flex items-center justify-center text-accent text-xl mb-5 transition-all group-hover:bg-accent group-hover:text-white">
+                <i class="fas fa-file-invoice"></i>
+              </div>
+              <h3 class="text-primary font-bold text-lg mb-2">MDPI Publication</h3>
+              <p class="text-gray-400 text-xs leading-relaxed mb-6">Full comprehensive architecture, training methodology, and validation benchmarks.</p>
+            </div>
+            <strong class="text-accent text-sm font-semibold flex items-center gap-1 group-hover:text-primary transition-colors">Read scientific paper <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></strong>
+          </a>
 
-        <article class="card">
-          <div class="icon">⚙️</div>
-          <h3>Automated experiments</h3>
-          <p>
-            Supports large-scale simulation campaigns, dataset generation, statistical aggregation, and reproducible experimentation workflows.
-          </p>
-        </article>
+          <a href="https://data.mendeley.com/datasets/ptjvmhb5dc/1" target="_blank" rel="noopener" class="bg-white border border-gray-200/60 rounded-2xl p-6 flex flex-col justify-between shadow-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md hover:border-secondary/40 group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-secondary/5 border border-secondary/10 flex items-center justify-center text-secondary text-xl mb-5 transition-all group-hover:bg-secondary group-hover:text-white">
+                <i class="fas fa-layer-group"></i>
+              </div>
+              <h3 class="text-primary font-bold text-lg mb-2">Mendeley Data</h3>
+              <p class="text-gray-400 text-xs leading-relaxed mb-6">Raw simulation logs, comprehensive experimental metrics, and supplementary data files.</p>
+            </div>
+            <strong class="text-secondary text-sm font-semibold flex items-center gap-1 group-hover:text-primary transition-colors">Explore dataset <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i></strong>
+          </a>
 
-        <article class="card">
-          <div class="icon">📊</div>
-          <h3>Analysis & visualization</h3>
-          <p>
-            Includes tools for processing simulation outputs, validating models, comparing scenarios, and generating publication-ready graphs.
-          </p>
-        </article>
+          <a href="#citation" class="bg-white border border-gray-200/60 rounded-2xl p-6 flex flex-col justify-between shadow-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md hover:border-accent/40 group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-accent/5 border border-accent/10 flex items-center justify-center text-accent text-xl mb-5 transition-all group-hover:bg-accent group-hover:text-white">
+                <i class="fas fa-quote-right"></i>
+              </div>
+              <h3 class="text-primary font-bold text-lg mb-2">BibTeX Citation</h3>
+              <p class="text-gray-400 text-xs leading-relaxed mb-6">Ready-to-use citation blocks for standard LaTeX software and paper referencing.</p>
+            </div>
+            <strong class="text-accent text-sm font-semibold flex items-center gap-1 group-hover:text-primary transition-colors">View bibtex entry <i class="fas fa-arrow-down text-xs transition-transform group-hover:translate-y-0.5"></i></strong>
+          </a>
 
-        <article class="card">
-          <div class="icon">🔬</div>
-          <h3>Academic reproducibility</h3>
-          <p>
-            Connects source code, research paper, dataset, and citation metadata to support transparent research reuse and validation.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="resources" class="page">
-      <div class="section-title">
-        <h2>Resources</h2>
-        <p>
-          Access the implementation, scientific publication, dataset, and citation details for academic use.
-        </p>
-      </div>
-
-      <div class="resource-grid">
-        <a class="card resource" href="https://github.com/dainiergonzalezromero/WiFi-QoS-NS3" target="_blank" rel="noopener">
-          <div>
-            <div class="icon">💻</div>
-            <h3>GitHub Repository</h3>
-            <small>Source code, scripts, models, and simulation framework.</small>
-          </div>
-          <strong>Open repo →</strong>
-        </a>
-
-        <a class="card resource" href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener">
-          <div>
-            <div class="icon">📄</div>
-            <h3>MDPI Paper</h3>
-            <small>Architecture, methodology, experiments, and research discussion.</small>
-          </div>
-          <strong>Read paper →</strong>
-        </a>
-
-        <a class="card resource" href="https://data.mendeley.com/datasets/ptjvmhb5dc/1" target="_blank" rel="noopener">
-          <div>
-            <div class="icon">🗂️</div>
-            <h3>Mendeley Dataset</h3>
-            <small>Experimental data, simulation results, and supplementary material.</small>
-          </div>
-          <strong>View dataset →</strong>
-        </a>
-
-        <a class="card resource" href="#citation">
-          <div>
-            <div class="icon">🎓</div>
-            <h3>BibTeX Citation</h3>
-            <small>Citation entry for academic reuse and software referencing.</small>
-          </div>
-          <strong>Copy citation →</strong>
-        </a>
+        </div>
       </div>
     </section>
 
-    <section id="citation" class="page">
-      <div class="section-title">
-        <h2>Citation</h2>
-        <p>
-          If you use this software, dataset, or methodology in your research, please cite the associated publication and repository.
-        </p>
-      </div>
+    <section id="citation" class="py-24 bg-white relative z-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mb-12 space-y-4">
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-primary tracking-tight">Citation</h2>
+          <p class="text-gray-500 text-base">
+            Please credit this research by citing the original peer-reviewed publication and framework source repository when building upon or utilizing this work.
+          </p>
+        </div>
 
-      <pre class="citation"><code>@software{gonzalez_romero_ca_sdwn_wifi_qos,
+        <div class="bg-primary border border-gray-900 rounded-2xl p-6 md:p-8 shadow-inner overflow-x-auto text-sm text-cyan-200 font-mono leading-relaxed max-w-4xl relative">
+          <div class="absolute top-3 right-4 text-xs text-white/30 uppercase tracking-widest font-sans font-bold select-none">LaTeX / BibTeX</div>
+          <pre class="pt-4"><code>@software{gonzalez_romero_ca_sdwn_wifi_qos,
   author  = {Gonzalez Romero, Dainier},
   title   = {CA-SDWN-WiFi-QoS: AI-based WiFi QoS Optimization in NS-3},
   url     = {https://github.com/dainiergonzalezromero/WiFi-QoS-NS3},
   version = {1.0.0},
   year    = {2025}
 }</code></pre>
-    </section>
-
-    <section id="keywords" class="page">
-      <div class="section-title">
-        <h2>Technical keywords</h2>
-        <p>
-          This project focuses on niche academic and technical search topics where the repository, paper, and dataset can reinforce each other.
-        </p>
-      </div>
-
-      <div class="tag-cloud" aria-label="Project keywords">
-        <span class="tag">CA-SDWN-WiFi-QoS</span>
-        <span class="tag">NS-3 WiFi QoS EDCA SDN</span>
-        <span class="tag">AI WiFi QoS NS-3</span>
-        <span class="tag">Software Defined Wireless Networks NS-3 QoS</span>
-        <span class="tag">Knowledge Defined Wireless Networks</span>
-        <span class="tag">IEEE 802.11e EDCA Optimization</span>
-        <span class="tag">Random Forest networking</span>
-        <span class="tag">Bayesian Optimization WiFi QoS</span>
+        </div>
       </div>
     </section>
 
-    <div class="seo-text">
+    <section id="keywords" class="py-24 bg-lightBg border-t border-gray-100 relative z-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mb-12 space-y-3">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">Technical Keywords</h2>
+          <p class="text-gray-500 text-sm sm:text-base">
+            Core mathematical, engineering, and artificial intelligence subtopics linked directly to this project's indexation.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2.5 max-w-4xl" aria-label="Project keywords">
+          <span class="px-4 py-2 bg-white border border-gray-200/80 hover:border-secondary/40 text-gray-600 rounded-full text-xs font-medium transition-colors cursor-default shadow-sm">CA-SDWN-WiFi-QoS</span>
+          <span class="px-4 py-2 bg-white border border-gray-200/80 hover:border-accent/40 text-gray-600 rounded-full text-xs font-medium transition-colors cursor-default shadow-sm">NS-3 WiFi QoS EDCA SDN</span>
+          <span class="px-4 py-2 bg-white border border-gray-200/80 hover:border-secondary/40 text-gray-600 rounded-full text-xs font-medium transition-colors cursor-default shadow-sm">AI WiFi QoS NS-3</span>
+          <span class="px-4 py-2 bg-white border border-gray-200/80 hover:border-accent/40 text-gray-600 rounded-full text-xs font-medium transition-colors cursor-default shadow-sm">Software Defined Wireless Networks NS-3 QoS</span>
+          <span class="px-4 py-2 bg-white border border-gray-200/80 hover:border-secondary/40 text-gray-600 rounded-full text-xs font-medium transition-colors cursor-default shadow-sm">Knowledge Defined Wireless Networks</span>
+          <span class="px-4 py-2 bg-white border border-gray-200/80 hover:border-accent/40 text-gray-600 rounded-full text-xs font-medium transition-colors cursor-default shadow-sm">IEEE 802.11e EDCA Optimization</span>
+          <span class="px-4 py-2 bg-white border border-gray-200/80 hover:border-secondary/40 text-gray-600 rounded-full text-xs font-medium transition-colors cursor-default shadow-sm">Random Forest networking</span>
+          <span class="px-4 py-2 bg-white border border-gray-200/80 hover:border-accent/40 text-gray-600 rounded-full text-xs font-medium transition-colors cursor-default shadow-sm">Bayesian Optimization WiFi QoS</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="sr-only">
       <p>CA-SDWN-WiFi-QoS is an AI-based WiFi QoS optimization framework for NS-3.</p>
       <p>Software Defined Wireless Networks and IEEE 802.11e EDCA QoS optimization using Machine Learning and Bayesian Optimization.</p>
       <p>NS-3 WiFi QoS EDCA SDN simulation framework for academic research in wireless networks.</p>
       <p>AI WiFi QoS NS-3 framework with Random Forest prediction models and Optuna Bayesian Optimization.</p>
     </div>
+
   </main>
 
-  <footer>
-    <div class="page footer-inner">
-      <p>© 2025 Dainier Gonzalez Romero. Released as open-source research software.</p>
-      <p>CA-SDWN-WiFi-QoS · NS-3 · SDWN · AI for Networking</p>
+  <footer class="bg-primary text-white py-16 relative z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 border-b border-white/10 pb-12">
+        
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gradient-to-br from-secondary to-accent rounded-lg flex items-center justify-center">
+              <i class="fas fa-network-wired text-white text-xs"></i>
+            </div>
+            <span class="text-white text-lg font-black tracking-wide">CA-SDWN-WiFi-QoS</span>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+            Open-source research-grade artificial intelligence framework for optimized WiFi Quality of Service simulations in NS-3 environments.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold tracking-wider uppercase text-xs mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#top" class="hover:text-accent transition-colors">Home / Top</a></li>
+            <li><a href="#features" class="hover:text-accent transition-colors">Framework Features</a></li>
+            <li><a href="https://www.mdpi.com/1999-5903/18/3/162" target="_blank" rel="noopener" class="hover:text-accent transition-colors">Scientific Paper</a></li>
+            <li><a href="https://data.mendeley.com/datasets/ptjvmhb5dc/1" target="_blank" rel="noopener" class="hover:text-accent transition-colors">Open-Data Dataset</a></li>
+            <li><a href="#citation" class="hover:text-accent transition-colors">BibTeX Citation</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold tracking-wider uppercase text-xs mb-4">Contact & Profiles</h4>
+          <div class="flex gap-4">
+            <a href="https://github.com/dainiergonzalezromero" target="_blank" rel="noopener" class="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center transition-colors text-lg" aria-label="GitHub Developer Profile">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="mailto:dainier.gonzalez@uns.edu.ar" class="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center transition-colors text-lg" aria-label="Email Institutional Contact">
+              <i class="fas fa-envelope"></i>
+            </a>
+            <a href="https://scholar.google.com" target="_blank" rel="noopener" class="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center transition-colors text-lg" aria-label="Google Scholar Profile">
+              <i class="fas fa-graduation-cap"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-2">
+        <p>© 2025 Dainier Gonzalez Romero. Released as open-source research software.</p>
+        <p>Universidad Nacional del Sur — ICIC, CONICET</p>
+      </div>
     </div>
   </footer>
+
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('menu-icon');
+      
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        menu.classList.add('hidden');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    }
+  </script>
+
 </body>
 </html>
