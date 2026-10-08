@@ -87,14 +87,14 @@
   }
 
   async function run() {
-    setPhase(0, 'IoT sensors and actuators send their data over WiFi');
+    setPhase(0, 'IoT Sensors and Actuators send their data over WiFi');
     await sleep(2600);
 
     for (;;) {
       // 1 · Observe: a node joins or leaves → the AP reports the new context
       var joining = svg.dataset.joined === '0';
       svg.dataset.joined = joining ? '1' : '0';
-      setPhase(1, joining ? 'Observe · a new sensor joins the network' : 'Observe · a sensor leaves the network');
+      setPhase(1, joining ? 'Observe · A new sensor joins the network' : 'Observe · A sensor leaves the network');
       ap.classList.add('active');
       await sleep(700);
       token('p-req', 1200);
@@ -102,7 +102,7 @@
       ap.classList.remove('active');
 
       // 2 · Predict: controller asks the agent, the Random Forest predicts D, T, L
-      setPhase(2, 'Predict · inside the CAP controller, the Random Forest estimates delay, throughput and loss');
+      setPhase(2, 'Predict · Inside the CAP Controller, the Random Forest estimates delay, throughput and loss');
       cap.classList.add('active'); ctrlBox.classList.add('active'); ctrl.classList.add('busy');
       token('p-ask', 600);
       await sleep(650);
@@ -115,7 +115,7 @@
       await sleep(700);
 
       // 3 · Optimize: Bayesian optimization searches the best CWmin/CWmax
-      setPhase(3, 'Optimize · Bayesian optimization finds the best CWmin / CWmax');
+      setPhase(3, 'Optimize · Bayesian Optimization finds the best CWmin / CWmax');
       svg.classList.add('bo-run');
       boSearch.beginElement();
       await sleep(2300);
@@ -123,7 +123,7 @@
       await sleep(900);
 
       // 4 · Reconfigure: agent → controller → AP → every node
-      setPhase(4, 'Reconfigure · the CAP controller sends the new parameters to the access point and every node');
+      setPhase(4, 'Reconfigure · The CAP Controller sends the new parameters to the Access Point and every node');
       token('p-cw', 650, 'cw');
       await sleep(700);
       token('p-upd', 1200, 'cw');
@@ -140,7 +140,7 @@
       await sleep(1100);
 
       // 5 · Repeat: wait for the next context change
-      setPhase(5, 'Repeat · every context change triggers a new cycle');
+      setPhase(5, 'Repeat · Every Context Change triggers a new cycle');
       await sleep(1600);
       reset();
       await sleep(400);
