@@ -123,7 +123,7 @@
       await sleep(900);
 
       // 4 · Reconfigure: agent → controller → AP → every node
-      setPhase(4, 'Reconfigure · The CAP Controller sends the new parameters to the Access Point and every node');
+      setPhase(4, 'Reconfigure · The CAP Controller sends the New Parameters to the Access Point and every node');
       token('p-cw', 650, 'cw');
       await sleep(700);
       token('p-upd', 1200, 'cw');
